@@ -1,0 +1,24 @@
+# Keep the build context small and never ship host state into the image.
+.git
+.github
+.vscode
+.idea
+
+node_modules
+dist
+.astro
+
+.env
+.env.*
+!.env.example
+
+npm-debug.log*
+*.log
+
+.DS_Store
+Thumbs.db
+
+# The image never needs its own Docker config.
+docker-compose*.yml
+compose*.yaml
+.dockerignore
