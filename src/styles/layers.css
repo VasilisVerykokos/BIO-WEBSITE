@@ -1,0 +1,3 @@
+/* Cascade order, declared once and never fought with !important.
+   Anything later in this list beats anything earlier, regardless of specificity. */
+@layer reset, tokens, base, components, utilities;

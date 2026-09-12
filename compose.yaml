@@ -1,6 +1,6 @@
 # Two ways to run this site.
 #
-#   docker compose up --build              → production build on http://localhost:8080
+#   docker compose up --build              → production build on http://localhost:8081
 #   docker compose --profile dev up        → dev server  on http://localhost:4321
 #
 # The default service is the production one: the same image that would be pushed
@@ -16,10 +16,10 @@ services:
       args:
         # Baked in at build time because Astro needs the canonical origin to emit
         # absolute URLs for Open Graph tags, JSON-LD, and the sitemap.
-        SITE_URL: ${SITE_URL:-http://localhost:8080}
+        SITE_URL: ${SITE_URL:-http://localhost:8081}
     image: bio-website:latest
     ports:
-      - "${PORT:-8080}:8080"
+      - '${PORT:-8080}:8080'
     restart: unless-stopped
     read_only: true
     tmpfs:
@@ -31,19 +31,19 @@ services:
     cap_drop:
       - ALL
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/"]
+      test: ['CMD', 'wget', '-q', '--spider', 'http://127.0.0.1:8080/']
       interval: 30s
       timeout: 3s
       start_period: 5s
       retries: 3
 
   dev:
-    profiles: ["dev"]
+    profiles: ['dev']
     build:
       context: .
       dockerfile: docker/Dockerfile.dev
     ports:
-      - "4321:4321"
+      - '4321:4321'
     volumes:
       - .:/app
       # Anonymous volume so the container keeps its own Linux-built node_modules
@@ -52,4 +52,4 @@ services:
     environment:
       SITE_URL: ${SITE_URL:-http://localhost:4321}
       # Bind mounts on Windows do not deliver inotify events into the container.
-      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_USEPOLLING: 'true'

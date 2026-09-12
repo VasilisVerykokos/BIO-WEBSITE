@@ -1,0 +1,64 @@
+---
+/**
+ * Phase 1 placeholder page.
+ *
+ * Its only job is to prove the foundations: that the cascade layers load in
+ * order, that the three self-hosted families resolve from /_astro/ rather
+ * than from a third party, and that the build ships no JavaScript.
+ *
+ * Phase 2 replaces all of this with BaseLayout, SiteHeader, MobileMenu, and
+ * SiteFooter. Nothing here is meant to survive.
+ */
+import '../styles/layers.css';
+import '../styles/tokens.css';
+import '../styles/reset.css';
+import '../styles/base.css';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Vasileios Verykokos — Full-Stack Developer</title>
+    <meta name="color-scheme" content="light" />
+  </head>
+  <body>
+    <main id="main">
+      <h1>Foundations</h1>
+      <p>
+        Phase 1 scaffold. Serif is Newsreader, and this sentence is set in it. The
+        <strong>ember accent</strong> and the rest of the design system arrive with the
+        layout shell in Phase 2.
+      </p>
+      <p class="sans">Inter renders this line — nav, labels, and meta use it.</p>
+      <p class="mono">JetBrains Mono renders this line · ΑΑΔΕ · ΓΕΜΗ · ΕΡΓΑΝΗ · 2026</p>
+    </main>
+  </body>
+</html>
+
+<style>
+  /* Scoped to this throwaway page. Tokens only — no raw values, so the Phase 1
+     acceptance grep stays clean even here. */
+  main {
+    max-width: var(--max);
+    margin-inline: auto;
+    padding-block: var(--section-y);
+  }
+
+  p {
+    margin-top: var(--sp-5);
+  }
+
+  .sans {
+    font-family: var(--font-sans);
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    letter-spacing: var(--tracking-mono);
+  }
+</style>

@@ -1,0 +1,279 @@
+/* ============================================================================
+   TOKENS — the single source of raw values for the whole site.
+
+   No hex, no px literal, and no font-family string may appear in any other
+   file. If a value is needed that is not here, it gets added here first.
+
+   Sections 1-5 mirror DESIGN_SYSTEM.md. The @font-face block lives here rather
+   than in its own file for exactly one reason: a font face cannot be declared
+   without naming a family, and this is the only file allowed to name one.
+   ========================================================================= */
+
+/* ----------------------------------------------------------------------------
+   0. FONT FACES — self-hosted woff2, zero third-party requests
+
+   Subsets are hand-picked rather than pulled from Fontsource's bundled CSS,
+   which ships every subset the family has (Cyrillic, Vietnamese) whether the
+   site can render them or not.
+
+   NEWSREADER SHIPS NO GREEK SUBSET. DESIGN_SYSTEM §2 asks for one; the family
+   does not have it. The content's only Greek is the three government-portal
+   acronyms, which are technical identifiers and are set in mono — JetBrains
+   Mono does have Greek. See the Phase 1 report.
+
+   The `wght` files carry the weight axis only. Newsreader also publishes
+   `opsz` and `standard` cuts that add an optical-size axis; those are 2.3x
+   the bytes for an axis this design never varies.
+   -------------------------------------------------------------------------- */
+
+/* Newsreader — headings and prose. Weight axis 200-800, we use 300-500. */
+@font-face {
+  font-family: 'Newsreader Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Newsreader Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('@fontsource-variable/newsreader/files/newsreader-latin-ext-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Italic is a separate file, not an axis. It exists for one job: the surname
+   in the hero. Phase 12 subsets it to the glyphs actually set in italic. */
+@font-face {
+  font-family: 'Newsreader Variable';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('@fontsource-variable/newsreader/files/newsreader-latin-wght-italic.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Inter — nav, eyebrow labels, meta, UI. Normal only; nothing in this design
+   is set in italic sans. */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* JetBrains Mono — stack tags, metrics, spec-sheet values. The developer
+   signature. Latin per DESIGN_SYSTEM §2, plus Greek because this face is what
+   renders ΑΑΔΕ / ΓΕΜΗ / ΕΡΓΑΝΗ. Greek downloads only when Greek is rendered. */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2')
+    format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('@fontsource/jetbrains-mono/files/jetbrains-mono-greek-400-normal.woff2')
+    format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url('@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2')
+    format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@layer tokens {
+  :root {
+    color-scheme: light;
+
+    /* --------------------------------------------------------------------
+       1. COLOUR — DESIGN_SYSTEM §1
+       -------------------------------------------------------------------- */
+
+    /* Surfaces — a 6% band of warm neutrals */
+    --paper: #fbf9f6; /* base background */
+    --paper-2: #f6f2ec; /* alternating section tint */
+    --paper-3: #f1ece4; /* header, footer, deepest tint */
+    --paper-sunken: #efeae2; /* inset blocks, code chips */
+
+    /* Ink */
+    --ink: #17171a; /* headings, primary text */
+    --ink-2: #45454c; /* body copy */
+    --ink-3: #6b6a66; /* secondary meta */
+    --muted: #8c8a84; /* eyebrow labels, dates, captions */
+
+    /* Structure */
+    --line: #e3ddd5; /* hairline rules */
+    --line-strong: #cfc7bc; /* emphasised divider, focus outline base */
+
+    /* Accent — ember. Confirmed 2026-09-13. Exactly three roles, per §1.1:
+       the hero surname, link underlines, and the section number / nav marker.
+       Never a button fill, a background block, or a second heading colour. */
+    --accent: #a8431c;
+    --accent-hover: #8a3514;
+    --accent-soft: #fbefe8; /* wash — used once, on the Huawei row */
+
+    /* Semantic */
+    --focus: #a8431c;
+    --selection-bg: #fbefe8;
+    --tap-highlight: rgb(168 67 28 / 0.12);
+
+    /* The one permitted shadow on the site: the mobile menu sheet, which
+       overlays content. DESIGN_SYSTEM §4.7. Nowhere else. */
+    --shadow-sheet: 0 8px 32px rgb(23 23 26 / 0.12);
+
+    /* --------------------------------------------------------------------
+       2. TYPOGRAPHY — DESIGN_SYSTEM §2
+       -------------------------------------------------------------------- */
+
+    --font-serif: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+    --font-sans:
+      'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-mono:
+      'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+    /* Fluid scale. Every size is a clamp() — this is how the layout stays
+       right at 320px without a pile of media queries. */
+    --fs-hero: clamp(2.75rem, 1.6rem + 5.6vw, 5.25rem); /*  44 -> 84px */
+    --fs-h2: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem); /*  28 -> 40px */
+    --fs-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem); /*  20 -> 24px */
+    --fs-lead: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem); /*  18 -> 22px */
+    --fs-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem); /*  17 -> 19px */
+    --fs-small: 0.9375rem; /* 15px */
+    --fs-label: 0.8125rem; /* 13px — uppercase eyebrows */
+    --fs-mono: 0.875rem; /* 14px */
+
+    /* Body text never drops below 17px. That is the audit's M5 finding. */
+
+    --fw-light: 300;
+    --fw-regular: 400;
+    --fw-medium: 500;
+    --fw-semibold: 600; /* Inter labels only. Headings never reach this. */
+
+    --lh-tight: 1.12; /* hero */
+    --lh-head: 1.25; /* h2, h3 */
+    --lh-body: 1.75; /* paragraphs — generous, per the audit */
+    --lh-ui: 1.4; /* nav, labels, tags */
+
+    --tracking-hero: -0.02em;
+    --tracking-label: 0.12em; /* uppercase eyebrows */
+    --tracking-mono: 0.01em;
+
+    /* --------------------------------------------------------------------
+       3. SPACING — DESIGN_SYSTEM §3. One 4px-based scale, nothing outside it.
+       -------------------------------------------------------------------- */
+
+    --sp-1: 0.25rem; /*   4px */
+    --sp-2: 0.5rem; /*   8px */
+    --sp-3: 0.75rem; /*  12px */
+    --sp-4: 1rem; /*  16px */
+    --sp-5: 1.5rem; /*  24px */
+    --sp-6: 2rem; /*  32px */
+    --sp-7: 3rem; /*  48px */
+    --sp-8: 4rem; /*  64px */
+    --sp-9: 6rem; /*  96px */
+    --sp-10: 8rem; /* 128px */
+
+    /* Fluid section rhythm — tighter on phones, airy on desktop */
+    --section-y: clamp(3.5rem, 2rem + 7vw, 7rem);
+    --gutter: clamp(1.25rem, 0.75rem + 2.5vw, 2.5rem);
+    --max: 61.25rem; /* 980px container */
+    --measure: 68ch; /* prose line length cap */
+
+    /* Layout chrome */
+    --header-h: 3.5rem; /* 56px — MOBILE_SPEC §7 caps the header here */
+    --tap-min: 2.75rem; /* 44px — the WCAG 2.5.8 floor */
+    --tap-menu: 3rem; /* 48px — the menu button and every sheet row */
+
+    /* --------------------------------------------------------------------
+       4. RADIUS — DESIGN_SYSTEM §4.8. These three and nothing else.
+       -------------------------------------------------------------------- */
+
+    --radius: 4px; /* chips, inputs */
+    --radius-lg: 8px; /* media */
+    --radius-round: 50%; /* the portrait */
+
+    /* Hairlines and focus. These exist as tokens for the same reason the
+       colours do: so that no component file ever contains a px literal, and
+       so a reviewer can grep for one and find nothing. */
+    --rule: 1px; /* every border, divider, and underline on the site */
+    --focus-width: 2px;
+    --focus-offset: 3px;
+    --radius-focus: 2px;
+    --pad-inline-link: 2px; /* the inline-link hit-area bump, MOBILE_SPEC §2 */
+
+    /* --------------------------------------------------------------------
+       5. MOTION — DESIGN_SYSTEM §5. Decoration only; no content depends on it.
+       -------------------------------------------------------------------- */
+
+    --dur-fast: 150ms; /* colour, border */
+    --dur-base: 300ms; /* menu, small transforms */
+    --dur-slow: 600ms; /* scroll reveals */
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    /* --------------------------------------------------------------------
+       6. BREAKPOINTS — MOBILE_SPEC §1. Only these four.
+
+       Reference values only. Custom properties are NOT valid inside a media
+       query, so the ladder is repeated literally in each @media rule. It is
+       recorded here so there is one place to read the ladder, and so script
+       can reach it if it ever needs to.
+
+       min-width queries only. A max-width query in this codebase is a defect,
+       with one exception: (hover: none) / (pointer: coarse) feature queries.
+       -------------------------------------------------------------------- */
+
+    --bp-sm: 30rem; /*  480px — large phone */
+    --bp-md: 48rem; /*  768px — tablet portrait */
+    --bp-lg: 64rem; /* 1024px — desktop */
+    --bp-xl: 80rem; /* 1280px — wide */
+  }
+}

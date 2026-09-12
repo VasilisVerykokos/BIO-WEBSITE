@@ -3,7 +3,7 @@
 Two ways to run the site. Both build from the repo root.
 
 ```bash
-docker compose up --build          # production build  → http://localhost:8080
+docker compose up --build          # production build  → http://localhost:8081
 docker compose --profile dev up    # dev server, HMR   → http://localhost:4321
 ```
 
@@ -39,6 +39,10 @@ the `include` in each block.
 does `/cv.pdf` — it is not hashed, its path can never change because it lives in sent
 applications, and a year-long cache would hand a recruiter a stale CV.
 
+**The host port defaults to 8081.** The container listens on 8080 internally, but
+8080 is already taken on the development machine by the accounting platform, so the
+published port avoids it. `PORT=8080 docker compose up` if that ever stops being true.
+
 **`SITE_URL` is a build argument, not a runtime one.** Astro needs the canonical origin
 at build time to emit absolute URLs for Open Graph, JSON-LD, and the sitemap. No host is
 hardcoded anywhere.
@@ -50,8 +54,13 @@ replacement — it is what makes the site portable to any host that runs a conta
 The headers and cache rules here and in `vercel.json` are deliberately identical, so
 whichever way the site is served, it is served the same.
 
-## Not yet verified
+## Verified
 
-The nginx config and `compose.yaml` are syntax-checked against real images. The image
-**build** cannot run until Phase 1 creates `package.json` and the Astro project —
-`npm ci` has nothing to install yet. First real build happens at the end of Phase 1.
+Built and run at the end of Phase 1. The image builds, the container serves the site as
+UID 101 on a read-only root filesystem, all five security headers are present on `/`, and
+`/_astro/*` comes back `max-age=31536000, immutable` while `/` comes back
+`max-age=0, must-revalidate`.
+
+One thing is deliberately still a placeholder: the CSP carries
+`'sha256-SCRIPT-HASH-PENDING'` where the hash of the Phase 2 inline head script goes.
+Wired up for real in Phase 14.

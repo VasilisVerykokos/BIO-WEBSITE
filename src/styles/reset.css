@@ -1,0 +1,179 @@
+/* ============================================================================
+   RESET — modern, minimal, and opinionated only where the spec demands it.
+
+   Everything here is required by MOBILE_SPEC. Nothing is here out of habit.
+   ========================================================================= */
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* The browser's default margins are a source of vertical-rhythm drift.
+     Spacing is set deliberately by the components instead. */
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  figure,
+  blockquote,
+  dl,
+  dd,
+  ul,
+  ol {
+    margin: 0;
+  }
+
+  ul[role='list'],
+  ol[role='list'] {
+    list-style: none;
+    padding: 0;
+  }
+
+  html {
+    /* MOBILE_SPEC §6 — stops iOS inflating text in landscape. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+
+    /* MOBILE_SPEC §3 — `clip`, never `hidden`. `hidden` on body silently
+       breaks position: sticky in some browsers, and the sticky header is
+       not optional. */
+    overflow-x: clip;
+  }
+
+  body {
+    overflow-x: clip;
+    max-width: 100%;
+    min-height: 100vh; /* fallback first — see the dvh line below */
+    min-height: 100dvh;
+  }
+
+  /* MOBILE_SPEC §3 — nothing may be wider than its container. */
+  img,
+  picture,
+  svg,
+  video,
+  canvas,
+  iframe,
+  table {
+    max-width: 100%;
+  }
+
+  img,
+  picture,
+  svg,
+  video,
+  canvas {
+    display: block;
+    height: auto;
+  }
+
+  /* Wide technical content scrolls inside its own box, never the page body. */
+  pre,
+  code,
+  samp,
+  kbd {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Inherit rather than fall back to the UA's font stack. */
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* MOBILE_SPEC §6 — anything under 16px makes iOS Safari zoom on focus.
+     There are no inputs on this site today; this is here so that adding one
+     later cannot reintroduce the bug. */
+  input,
+  textarea,
+  select {
+    font-size: max(1rem, var(--fs-body));
+  }
+
+  button {
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  /* MOBILE_SPEC §10 — removes the 300ms tap delay without disabling zoom. */
+  a,
+  button,
+  summary,
+  label,
+  [role='button'],
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
+  }
+
+  /* MOBILE_SPEC §6 — a deliberate ember tap flash instead of the default
+     blue box. */
+  html {
+    -webkit-tap-highlight-color: var(--tap-highlight);
+  }
+
+  /* Long unbroken strings (URLs, github.com/VasilisVerykokos) must never
+     push the page wider than the viewport. */
+  p,
+  li,
+  dd,
+  dt,
+  a,
+  h1,
+  h2,
+  h3,
+  h4 {
+    overflow-wrap: break-word;
+  }
+
+  /* DESIGN_SYSTEM §2.2 — hyphenation off, pretty wrapping on prose,
+     balanced wrapping on headings. */
+  p,
+  li,
+  dd {
+    text-wrap: pretty;
+    hyphens: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+    hyphens: none;
+  }
+
+  ::selection {
+    background-color: var(--selection-bg);
+    color: var(--ink);
+  }
+
+  /* Tables are only ever used for tabular data here, never for layout. */
+  table {
+    border-collapse: collapse;
+  }
+
+  /* Honour the user's own motion setting above anything the design wants. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
