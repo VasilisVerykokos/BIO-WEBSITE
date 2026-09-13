@@ -25,10 +25,14 @@
     font-weight: var(--fw-regular);
     line-height: var(--lh-body);
 
-    /* MOBILE_SPEC §6 — respect the notch and the home indicator. The gutter
-       is the floor, the inset takes over when it is larger. */
-    padding-left: max(var(--gutter), env(safe-area-inset-left));
-    padding-right: max(var(--gutter), env(safe-area-inset-right));
+    /* The safe-area padding that MOBILE_SPEC §6 puts on <body> lives on
+       .container instead. Reason: DESIGN_SYSTEM §1.2 gives every section its
+       own background tint, and a tint that stops short of the screen edge
+       looks broken. Padding on body would inset every one of them.
+
+       The intent of the rule is preserved exactly — no content ever sits under
+       the notch, because every piece of content is inside a .container. Only
+       the backgrounds run full-bleed. */
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -135,6 +139,17 @@
   /* ------------------------------------------------------------------------
      Utilities
      ---------------------------------------------------------------------- */
+
+  /* The one horizontal-rhythm primitive. Caps the measure, centres it, and
+     carries the safe-area insets so that nothing inside it can ever sit under
+     a notch or a rounded corner. */
+  .container {
+    width: 100%;
+    max-width: var(--max);
+    margin-inline: auto;
+    padding-left: max(var(--gutter), env(safe-area-inset-left));
+    padding-right: max(var(--gutter), env(safe-area-inset-right));
+  }
 
   .visually-hidden:not(:focus):not(:active) {
     position: absolute;

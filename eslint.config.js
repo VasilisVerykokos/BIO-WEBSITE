@@ -37,6 +37,19 @@ export default defineConfig(
         ...globals.node,
       },
     },
+    rules: {
+      /**
+       * role="list" on a <ul> is redundant on paper and necessary in practice:
+       * Safari and iOS VoiceOver drop list semantics from any list styled with
+       * `list-style: none`, so a navigation list stops announcing "list, 4
+       * items". reset.css pairs the two deliberately (`ul[role='list']`), which
+       * is why the role is allowed here rather than the rule being switched off.
+       *
+       * Narrowed to exactly this element/role pair. Every other redundant role
+       * is still an error.
+       */
+      'astro/jsx-a11y/no-redundant-roles': ['error', { ul: ['list'], ol: ['list'] }],
+    },
   },
 
   // Config files run in Node and legitimately read process.env.

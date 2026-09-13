@@ -1,0 +1,299 @@
+---
+import { navItems } from '../lib/site';
+
+/**
+ * The mobile navigation sheet and the button that opens it.
+ *
+ * Both live here so the button's aria-controls and the panel's id cannot drift.
+ *
+ * The panel ships with `inert` and `aria-hidden="true"` already set in the
+ * markup, not applied by script. If JavaScript never runs, the panel stays
+ * closed, stays out of the accessibility tree, and stays untabbable — and the
+ * header falls back to the inline nav, which needs no script at all.
+ */
+---
+
+<button
+  type="button"
+  class="nav-toggle"
+  aria-expanded="false"
+  aria-controls="site-menu"
+  aria-label="Open navigation menu"
+>
+  <span class="nav-toggle__bars" aria-hidden="true">
+    <span></span>
+    <span></span>
+  </span>
+</button>
+
+<div id="site-menu" class="menu-sheet" inert aria-hidden="true">
+  <nav aria-label="Site">
+    <ul role="list">
+      {navItems.map((item) => (
+        <li>
+          <a href={item.href}>{item.label}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</div>
+
+<style>
+  /* ------------------------------------------------------------------------
+     The button — 48x48, per MOBILE_SPEC §7. Not 32x32, which is the single
+     most-repeated failure in the reference audit (finding M1).
+
+     Hidden by default and shown only once .js is on <html>: a button that
+     opens a scripted panel is worse than useless without script.
+     ---------------------------------------------------------------------- */
+
+  .nav-toggle {
+    display: none;
+    place-items: center;
+    width: var(--tap-menu);
+    height: var(--tap-menu);
+    margin-right: calc(-1 * var(--sp-3)); /* optical alignment to the gutter */
+    color: var(--ink);
+  }
+
+  :global(html.js) .nav-toggle {
+    display: grid;
+  }
+
+  .nav-toggle__bars {
+    display: grid;
+    gap: var(--sp-2);
+    width: var(--sp-5);
+  }
+
+  .nav-toggle__bars > span {
+    display: block;
+    height: var(--rule);
+    background-color: currentcolor;
+    transition: transform var(--dur-base) var(--ease);
+  }
+
+  /* Two bars becoming a cross. transform only — no layout animation. */
+  .nav-toggle[aria-expanded='true'] .nav-toggle__bars > span:first-child {
+    transform: translateY(calc(var(--sp-2) / 2 + var(--rule) / 2)) rotate(45deg);
+  }
+
+  .nav-toggle[aria-expanded='true'] .nav-toggle__bars > span:last-child {
+    transform: translateY(calc(-1 * (var(--sp-2) / 2 + var(--rule) / 2))) rotate(-45deg);
+  }
+
+  /* ------------------------------------------------------------------------
+     The sheet
+     ---------------------------------------------------------------------- */
+
+  .menu-sheet {
+    position: fixed;
+    inset-inline: 0;
+    top: calc(var(--header-h) + env(safe-area-inset-top));
+    z-index: 90;
+    background-color: var(--paper-3);
+    border-bottom: var(--rule) solid var(--line);
+
+    /* DESIGN_SYSTEM §4.7 — the one shadow permitted anywhere on this site,
+       because this is the one thing that overlays content. */
+    box-shadow: var(--shadow-sheet);
+
+    /* Closed state. transform and opacity only, never height or display, so
+       the animation stays on the compositor. */
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--sp-3)));
+
+    /* visibility is stepped, not eased: on the way out it must stay `visible`
+       for the whole fade and only flip at the end, which is what the 0s
+       duration with a full-length delay does. On the way in (below) it flips
+       immediately, so the panel is focusable the moment it opens. */
+    transition:
+      opacity var(--dur-base) var(--ease),
+      transform var(--dur-base) var(--ease),
+      visibility 0s linear var(--dur-base);
+  }
+
+  .menu-sheet[data-open] {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity var(--dur-base) var(--ease),
+      transform var(--dur-base) var(--ease),
+      visibility 0s;
+  }
+
+  .menu-sheet ul {
+    display: grid;
+    margin: 0;
+    padding: 0;
+  }
+
+  .menu-sheet li + li {
+    border-top: var(--rule) solid var(--line);
+  }
+
+  /* Full-width rows at >= 48px, per MOBILE_SPEC §7. */
+  .menu-sheet a {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap-menu);
+    padding: var(--sp-4) max(var(--gutter), env(safe-area-inset-left));
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    line-height: var(--lh-ui);
+    text-decoration: none;
+  }
+
+  .menu-sheet a:focus-visible {
+    outline-offset: calc(-1 * var(--focus-offset));
+  }
+
+  /* The sheet is a small-screen affordance only. */
+  @media (min-width: 64rem) {
+    :global(html.js) .nav-toggle {
+      display: none;
+    }
+
+    .menu-sheet {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Mobile menu behaviour — MOBILE_SPEC §7 in full.
+   *
+   * Closes on: link tap, Escape, tap outside, and browser back.
+   * Traps focus while open and returns it to the button on close.
+   * Locks body scroll without the iOS jump.
+   */
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const sheet = document.querySelector<HTMLElement>('#site-menu');
+
+  if (toggle && sheet) {
+    const FOCUSABLE = 'a[href], button:not([disabled])';
+    let scrollY = 0;
+    let isOpen = false;
+
+    const setScrollLock = (lock: boolean) => {
+      const body = document.body;
+      if (lock) {
+        scrollY = window.scrollY;
+        body.style.position = 'fixed';
+        body.style.top = `-${scrollY}px`;
+        body.style.width = '100%';
+      } else {
+        body.style.position = '';
+        body.style.top = '';
+        body.style.width = '';
+        // Restoring in one jump, before paint, so the page does not appear to
+        // scroll. This is the bit iOS gets wrong if you only unset position.
+        window.scrollTo(0, scrollY);
+      }
+    };
+
+    const open = () => {
+      if (isOpen) return;
+      isOpen = true;
+
+      sheet.removeAttribute('inert');
+      sheet.setAttribute('aria-hidden', 'false');
+      sheet.setAttribute('data-open', '');
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Close navigation menu');
+
+      setScrollLock(true);
+
+      // A history entry so the hardware/browser back gesture closes the menu
+      // rather than leaving the page — the behaviour people expect on Android.
+      history.pushState({ menu: true }, '');
+
+      // A hidden element cannot take focus, and the sheet is still
+      // `visibility: hidden` until the style change above is applied. Reading
+      // a layout property forces that recalculation synchronously, so the
+      // focus() below lands instead of silently doing nothing.
+      //
+      // requestAnimationFrame does NOT work here: in Chrome the callback runs
+      // before style recalc for the frame, so the sheet is still hidden.
+      void sheet.offsetHeight;
+
+      sheet.querySelector<HTMLElement>(FOCUSABLE)?.focus();
+    };
+
+    const close = (options: { restoreFocus?: boolean; fromPopState?: boolean } = {}) => {
+      if (!isOpen) return;
+      isOpen = false;
+
+      sheet.removeAttribute('data-open');
+      sheet.setAttribute('inert', '');
+      sheet.setAttribute('aria-hidden', 'true');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open navigation menu');
+
+      setScrollLock(false);
+
+      if (options.restoreFocus !== false) toggle.focus();
+
+      // Keep the history stack clean: if we opened the menu and are closing it
+      // by some other means, drop the entry we pushed.
+      if (!options.fromPopState && history.state?.menu) history.back();
+    };
+
+    toggle.addEventListener('click', () => (isOpen ? close() : open()));
+
+    // Anchor taps close the sheet, but focus must follow the anchor to the
+    // section rather than snapping back to the button.
+    sheet.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) close({ restoreFocus: false });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!isOpen) return;
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      // Focus trap. The sheet is the only thing on screen while it is open, so
+      // Tab must cycle inside it.
+      const items = [...sheet.querySelectorAll<HTMLElement>(FOCUSABLE)];
+      if (items.length === 0) return;
+
+      const first = items[0]!;
+      const last = items[items.length - 1]!;
+      const active = document.activeElement;
+
+      if (event.shiftKey && (active === first || active === toggle)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    // Tap outside. The header is excluded so that tapping the button itself
+    // is handled by its own click listener rather than closing twice.
+    document.addEventListener('pointerdown', (event) => {
+      if (!isOpen) return;
+      const target = event.target as Node;
+      if (!sheet.contains(target) && !toggle.contains(target)) close();
+    });
+
+    window.addEventListener('popstate', () => close({ fromPopState: true }));
+
+    // Crossing into desktop with the sheet open would leave the body scroll
+    // locked behind a panel that is no longer rendered.
+    window.matchMedia('(min-width: 64rem)').addEventListener('change', (event) => {
+      if (event.matches) close({ restoreFocus: false });
+    });
+  }
+</script>

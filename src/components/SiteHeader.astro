@@ -1,0 +1,143 @@
+---
+import MobileMenu from './MobileMenu.astro';
+import { navItems, site } from '../lib/site';
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="wordmark" href="#main">
+      {site.name}
+    </a>
+
+    {/* One nav element, shown in two situations: on desktop, and at any width
+        when JavaScript is not running. The second case is why the sheet is an
+        enhancement rather than the only way to navigate. */}
+    <nav class="nav-primary" aria-label="Primary">
+      <ul role="list">
+        {navItems.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <MobileMenu />
+  </div>
+</header>
+
+<style>
+  /* MOBILE_SPEC §7 — sticky, <= 56px, --paper-3, one hairline bottom border,
+     and no backdrop blur. Blur costs real paint time on mid-range Android and
+     buys nothing on a flat paper background. */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 95;
+    background-color: var(--paper-3);
+    border-bottom: var(--rule) solid var(--line);
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    min-height: var(--header-h);
+
+    /* Wraps only in the no-JS case below 1024px, where the nav becomes a
+       second row. The header is allowed to grow there; the 56px cap describes
+       the normal case, and a taller header beats an unnavigable one. */
+    flex-wrap: wrap;
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: var(--fs-body);
+    line-height: var(--lh-ui);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------------------
+     Primary nav
+     ---------------------------------------------------------------------- */
+
+  .nav-primary {
+    display: none;
+  }
+
+  /* No script: the nav is the navigation, at every width. */
+  :global(html:not(.js)) .nav-primary {
+    display: block;
+    width: 100%;
+    padding-bottom: var(--sp-2);
+  }
+
+  .nav-primary ul {
+    display: flex;
+    flex-wrap: wrap;
+
+    /* MOBILE_SPEC §2 — at least 8px of clear space between adjacent targets. */
+    gap: var(--sp-3);
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-primary a {
+    display: inline-flex;
+    align-items: center;
+
+    /* The visual label is small; the hit area is not. */
+    min-height: var(--tap-min);
+    min-width: var(--tap-min);
+    justify-content: center;
+    padding-inline: var(--sp-2);
+
+    color: var(--ink-3);
+    font-family: var(--font-sans);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-label);
+    line-height: var(--lh-ui);
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .nav-primary a:hover,
+    .wordmark:hover {
+      color: var(--accent);
+    }
+  }
+
+  .nav-primary a:focus-visible,
+  .wordmark:focus-visible {
+    color: var(--accent);
+  }
+
+  @media (min-width: 64rem) {
+    .header-inner {
+      flex-wrap: nowrap;
+    }
+
+    .nav-primary {
+      display: block;
+    }
+
+    :global(html:not(.js)) .nav-primary {
+      width: auto;
+      padding-bottom: 0;
+    }
+
+    .nav-primary ul {
+      gap: var(--sp-5);
+    }
+  }
+</style>

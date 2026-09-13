@@ -1,0 +1,131 @@
+---
+import '../styles/layers.css';
+import '../styles/tokens.css';
+import '../styles/reset.css';
+import '../styles/base.css';
+
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { site } from '../lib/site';
+
+/**
+ * Preload the two faces that paint above the fold.
+ *
+ * Importing the woff2 with ?url hands back the same content-hashed path the
+ * stylesheet resolves to, so the preload and the @font-face cannot drift apart
+ * the way a hand-written path would.
+ *
+ * Only two, deliberately: MOBILE_SPEC §9 says preload the above-the-fold faces
+ * ONLY, because every preload competes with the LCP for bandwidth. The third
+ * candidate is Newsreader italic, which sets the surname in the hero — Phase 3
+ * decides whether it earns a preload once there is a hero to measure.
+ */
+import newsreaderUrl from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
+import interUrl from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = site.title, description = site.description } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
+---
+
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <meta charset="utf-8" />
+
+    {/* MOBILE_SPEC §6. viewport-fit=cover is required, and there is deliberately
+        no user-scalable=no and no maximum-scale — pinch zoom must work (WCAG 1.4.4). */}
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content={site.themeColor} />
+
+    {/* Open Graph and Twitter. The share card image is Phase 13 — it is
+        high-leverage enough to deserve its own pass rather than a placeholder
+        that might survive to production. */}
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <link rel="preload" as="font" type="font/woff2" href={newsreaderUrl} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={interUrl} crossorigin />
+
+    {/* The only blocking script on the page, and the only inline one.
+
+        It exists so that CSS can tell whether JavaScript is alive. Everything
+        that hides content keys off .js, which means that if this script never
+        runs — blocked, errored, still downloading — nothing is hidden and every
+        word on the page is readable. That is the ziakis.com failure (audit M2)
+        that produced a blank screenshot twice, and this line is the fix.
+
+        Phase 14 adds its sha256 to the Content-Security-Policy. */}
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+
+    <SiteHeader />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  /* The skip link is the first focusable element on the page.
+
+     It is moved off-screen with a transform rather than shrunk to 1x1, because
+     a 1px element is a sub-44px touch target and would fail the MOBILE_SPEC §2
+     audit. Off-screen at full size passes it honestly. */
+  .skip-link {
+    position: fixed;
+    top: var(--sp-2);
+    left: var(--sp-2);
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding-inline: var(--sp-4);
+    background-color: var(--paper-3);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    text-decoration: none;
+    border: var(--rule) solid var(--line-strong);
+    border-radius: var(--radius);
+    transform: translateY(calc(-100% - var(--sp-5)));
+    transition: transform var(--dur-fast) var(--ease);
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+</style>

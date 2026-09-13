@@ -1,62 +1,66 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
 /**
- * Phase 1 placeholder page.
+ * Phase 2 — the layout shell only.
  *
- * Its only job is to prove the foundations: that the cascade layers load in
- * order, that the three self-hosted families resolve from /_astro/ rather
- * than from a third party, and that the build ships no JavaScript.
+ * The sections below are structural stubs, not content. They exist so the
+ * header and footer anchors resolve, so scroll-margin-top can be verified
+ * against the sticky header, and so the page-height measurement has something
+ * to measure. Each one is replaced by its own phase:
  *
- * Phase 2 replaces all of this with BaseLayout, SiteHeader, MobileMenu, and
- * SiteFooter. Nothing here is meant to survive.
+ *   Hero      Phase 3        Skills     Phase 6
+ *   Awards    Phase 4        About      Phase 7
+ *   Work      Phase 5        Contact    Phase 8
+ *
+ * Every stub is visibly labelled. None can survive to production unnoticed,
+ * and the Phase 14 build guard is a second line of defence.
  */
-import '../styles/layers.css';
-import '../styles/tokens.css';
-import '../styles/reset.css';
-import '../styles/base.css';
+const stubs = [
+  { id: 'hero', title: 'Hero', phase: 3, tint: 'paper' },
+  { id: 'awards', title: 'Awards', phase: 4, tint: 'paper-2' },
+  { id: 'work', title: 'Work', phase: 5, tint: 'paper' },
+  { id: 'skills', title: 'Skills', phase: 6, tint: 'paper-2' },
+  { id: 'about', title: 'About', phase: 7, tint: 'paper' },
+  { id: 'education', title: 'Education', phase: 7, tint: 'paper-2' },
+  { id: 'contact', title: 'Contact', phase: 8, tint: 'paper-3' },
+] as const;
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-    <title>Vasileios Verykokos — Full-Stack Developer</title>
-    <meta name="color-scheme" content="light" />
-  </head>
-  <body>
-    <main id="main">
-      <h1>Foundations</h1>
-      <p>
-        Phase 1 scaffold. Serif is Newsreader, and this sentence is set in it. The
-        <strong>ember accent</strong> and the rest of the design system arrive with the
-        layout shell in Phase 2.
-      </p>
-      <p class="sans">Inter renders this line — nav, labels, and meta use it.</p>
-      <p class="mono">JetBrains Mono renders this line · ΑΑΔΕ · ΓΕΜΗ · ΕΡΓΑΝΗ · 2026</p>
-    </main>
-  </body>
-</html>
+<BaseLayout>
+  {stubs.map((stub) => (
+    <section id={stub.id} aria-labelledby={`${stub.id}-heading`} data-tint={stub.tint}>
+      <div class="container section-inner">
+        <h2 id={`${stub.id}-heading`}>{stub.title}</h2>
+        <p class="stub-note">Structural stub — built in Phase {stub.phase}.</p>
+      </div>
+    </section>
+  ))}
+</BaseLayout>
 
 <style>
-  /* Scoped to this throwaway page. Tokens only — no raw values, so the Phase 1
-     acceptance grep stays clean even here. */
-  main {
-    max-width: var(--max);
-    margin-inline: auto;
+  /* DESIGN_SYSTEM §1.2 — the tint ladder. Alternating backgrounds give the
+     scroll rhythm without drawing a single divider line. Full-bleed, which is
+     why .container rather than body carries the gutter. */
+  section[data-tint='paper'] {
+    background-color: var(--paper);
+  }
+
+  section[data-tint='paper-2'] {
+    background-color: var(--paper-2);
+  }
+
+  section[data-tint='paper-3'] {
+    background-color: var(--paper-3);
+  }
+
+  .section-inner {
     padding-block: var(--section-y);
   }
 
-  p {
-    margin-top: var(--sp-5);
-  }
-
-  .sans {
-    font-family: var(--font-sans);
-  }
-
-  .mono {
+  .stub-note {
+    margin-top: var(--sp-3);
+    color: var(--muted);
     font-family: var(--font-mono);
     font-size: var(--fs-mono);
     letter-spacing: var(--tracking-mono);
