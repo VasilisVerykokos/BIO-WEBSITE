@@ -212,7 +212,20 @@
     --ink: #17171a; /* headings, primary text */
     --ink-2: #45454c; /* body copy */
     --ink-3: #6b6a66; /* secondary meta */
-    --muted: #8c8a84; /* eyebrow labels, dates, captions */
+    /* Eyebrow labels, dates, captions.
+       DESIGN_SYSTEM §1.3 specifies #8c8a84 and describes it as "AA large/UI
+       text only". Measured during the Phase 11 pass, that value is 3.28:1 on
+       --paper and 2.94:1 on --paper-3, and axe flagged 31 elements.
+       "Large text" under WCAG means 18.66px bold or 24px regular; every use of
+       this token here is a 13px eyebrow or a 14px mono date, so none of them
+       qualify and all of them needed 4.5:1.
+       Darkened to the lightest warm value that clears 4.5:1 on all four
+       surfaces it sits on: --paper 5.04, --paper-2 4.76, --paper-3 4.50,
+       --accent-soft 4.70. Kept deliberately warm (R-B spread of 22 against
+       --ink-3's 5) so the two tokens stay visually distinct rather than
+       collapsing into one grey. §1.3 calls contrast non-negotiable; this is
+       that rule applied to its own palette. */
+    --muted: #746a5e;
 
     /* Structure */
     --line: #e3ddd5; /* hairline rules */
