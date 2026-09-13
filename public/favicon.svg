@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Vasileios Verykokos">
+  <!-- Warm paper ground, the same value as the paper-3 token. The mark is a
+       drawn V rather than set type: a favicon cannot load a webfont, and a
+       system serif would be a different letterform on every platform. -->
+  <rect width="100" height="100" rx="18" fill="#f1ece4"/>
+  <path d="M26 27 L50 73 L74 27"
+        fill="none"
+        stroke="#a8431c"
+        stroke-width="11"
+        stroke-linecap="square"
+        stroke-linejoin="miter"/>
+</svg>

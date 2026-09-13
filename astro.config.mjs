@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 /**
  * The canonical origin.
@@ -26,6 +27,11 @@ if (!process.env.SITE_URL && process.env.NODE_ENV === 'production') {
 // https://astro.build/config
 export default defineConfig({
   site: SITE_URL,
+
+  // One page today, but the sitemap costs nothing and is the thing that makes
+  // a new domain discoverable. robots.txt points at it, and both derive their
+  // host from SITE_URL rather than hardcoding one.
+  integrations: [sitemap()],
 
   // A static site. No adapter, no server runtime, nothing to keep alive.
   output: 'static',
