@@ -51,4 +51,47 @@
   section[data-tint='paper-3'] {
     background-color: var(--paper-3);
   }
+
+  /* --------------------------------------------------------------------------
+     Scroll reveal — MOBILE_SPEC §4
+
+     The single most important rule in the file is the first one: .reveal is
+     VISIBLE by default. Hiding only happens once the inline head script has
+     proved JavaScript is running and put .js on <html>.
+
+     This is the exact failure the reference audit recorded as M2 — 34 of 34
+     elements starting at opacity:0, which produced a blank screenshot twice
+     during that audit. If our script is blocked, errors, or simply has not run
+     yet, every word on this page is still on screen.
+     ------------------------------------------------------------------------ */
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  html.js .reveal {
+    opacity: 0;
+    transform: translateY(var(--reveal-shift));
+  }
+
+  html.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--dur-slow) var(--ease),
+      transform var(--dur-slow) var(--ease);
+  }
+
+  /* Reduced motion removes the animation AND the hiding. Turning off the
+     transition alone would leave content at opacity 0 until the observer
+     fired, which is the same bug wearing a different hat. */
+  @media (prefers-reduced-motion: reduce) {
+    html.js .reveal,
+    html.js .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
 }

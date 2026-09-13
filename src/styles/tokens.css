@@ -324,6 +324,10 @@
     --dur-fast: 150ms; /* colour, border */
     --dur-base: 300ms; /* menu, small transforms */
     --dur-slow: 600ms; /* scroll reveals */
+
+    /* The only transform a reveal is allowed. DESIGN_SYSTEM §5.2 permits
+       opacity and translateY and nothing else — no scale, no rotate, no blur. */
+    --reveal-shift: 12px;
     --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 
     /* --------------------------------------------------------------------
