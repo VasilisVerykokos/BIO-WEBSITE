@@ -1,0 +1,41 @@
+---
+import { about } from '../lib/site';
+---
+
+<section id="about" data-tint="paper" aria-labelledby="about-heading">
+  <div class="container section-inner">
+    <p class="eyebrow">About</p>
+    <h2 id="about-heading" class="section-heading">
+      A bit more
+    </h2>
+
+    <div class="about-prose">
+      {about.map((paragraph) => (
+        <p>{paragraph}</p>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-prose {
+    margin-top: var(--sp-5);
+
+    /* DESIGN_SYSTEM §2.2 — never let a paragraph run the full container.
+       Base already caps every <p> at --measure; this pins the block itself so
+       the three paragraphs share one ragged edge rather than three. */
+    max-width: var(--measure);
+  }
+
+  .about-prose p + p {
+    margin-top: var(--sp-4);
+  }
+
+  /* Left-aligned, never centred. DESIGN_SYSTEM §2.2 forbids centring body
+     copy longer than two lines, and all three of these are longer. */
+  .about-prose p {
+    color: var(--ink-2);
+    line-height: var(--lh-body);
+    text-align: left;
+  }
+</style>

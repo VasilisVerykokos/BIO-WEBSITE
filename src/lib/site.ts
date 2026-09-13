@@ -194,3 +194,44 @@ export const skillGroups = [
     items: ['Git', 'Docker', 'Linux', 'BPMN', 'DMN'],
   },
 ] as const;
+
+/**
+ * About, from CONTENT.md § About, verbatim.
+ *
+ * CONTENT.md suggests keeping this under 120 words. As written it is slightly
+ * over; the words are Vasilis's and trimming them is an editorial call that
+ * belongs to him, so it ships whole and the exact count is in the Phase 7
+ * report.
+ */
+export const about = [
+  "I finished Applied Informatics at the University of Macedonia in 2026 with a GPA of 8.23, specialising in information systems. Most of what I've learned came from building things that had to work in front of judges or in front of a real user, on a deadline — a wildfire model that had to render in seconds, a platform that had to keep one firm's data away from another's.",
+  "I'm drawn to problems where the software has to model something real and be honest about uncertainty. I'm equally happy in a Spring Boot service or a React interface, and I'm actively working toward AI/ML.",
+  'Outside work: music, team sports, travel, and the friends who put up with me talking about fire-spread models.',
+] as const;
+
+/**
+ * Education and background, from CONTENT.md.
+ *
+ * Four rows. The water-park job sits here as seasonal work and is not
+ * inflated — BUILD_PLAN Phase 7 is explicit about that, and padding it would
+ * be the kind of thing a reviewer notices.
+ *
+ * `date` is optional: the last two rows are standing facts rather than dated
+ * periods, and giving them an invented date range would be a lie for the sake
+ * of a tidy column.
+ */
+export const education = [
+  {
+    date: '2022 — 2026',
+    lines: [
+      'University of Macedonia, Thessaloniki',
+      'BSc Applied Informatics — Information Systems · GPA 8.23',
+    ],
+  },
+  {
+    date: '2022 — 2023',
+    lines: ['Seasonal summer employment, water park — tourism entertainment company'],
+  },
+  { date: null, lines: ['English — C2, Certificate of Proficiency'] },
+  { date: null, lines: ['Military obligations — fulfilled'] },
+] as const;

@@ -242,7 +242,6 @@ const headingId = `project-${slug}`;
     padding: 0;
     display: grid;
     gap: var(--sp-2);
-    max-width: var(--measure);
   }
 
   .also-built li {
@@ -251,6 +250,12 @@ const headingId = `project-${slug}`;
     color: var(--ink-2);
     font-size: var(--fs-small);
     line-height: var(--lh-ui);
+
+    /* The measure cap belongs on the element that renders the text, not on
+       the list around it. `ch` resolves against the element's own font-size,
+       and these items are --fs-small while the <ul> inherits body size — so a
+       cap on the parent let these run to 86ch at 1440px. */
+    max-width: var(--measure);
   }
 
   .also-built li::before {

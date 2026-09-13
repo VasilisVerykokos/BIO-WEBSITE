@@ -1,0 +1,96 @@
+---
+import { education } from '../lib/site';
+---
+
+<section id="education" data-tint="paper-2" aria-labelledby="education-heading">
+  <div class="container section-inner">
+    <p class="eyebrow">Background</p>
+    <h2 id="education-heading" class="section-heading">
+      Education
+    </h2>
+
+    {/*
+      A list, not a <dl>, despite reading as one.
+
+      Two of the four rows have no date. A definition list would need a <dt>
+      for each, so the dateless rows would have to be given an invented label
+      or an empty term — one is a lie, the other is malformed. A list of rows
+      with an optional date says exactly what is true.
+    */}
+    <ul class="education" role="list">
+      {education.map((entry) => (
+        <li class="edu-row">
+          {entry.date && <p class="edu-date">{entry.date}</p>}
+          <div class="edu-detail">
+            {entry.lines.map((line, i) => (
+              <p class:list={['edu-line', { 'is-secondary': i > 0 }]}>{line}</p>
+            ))}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .education {
+    margin: var(--sp-5) 0 0;
+    padding: 0;
+  }
+
+  .edu-row {
+    padding-block: var(--sp-4);
+  }
+
+  .edu-row + .edu-row {
+    border-top: var(--rule) solid var(--line);
+  }
+
+  /* Mobile: date above the detail, same as the spec sheet and the award rows.
+     Every date starts at the same left edge, so the column reads as aligned
+     without squeezing the institution names into 180px. */
+  .edu-date {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    letter-spacing: var(--tracking-mono);
+    line-height: var(--lh-ui);
+    white-space: nowrap;
+  }
+
+  .edu-line {
+    max-width: var(--measure);
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: var(--fs-body);
+    line-height: var(--lh-ui);
+  }
+
+  .edu-date + .edu-detail {
+    margin-top: var(--sp-2);
+  }
+
+  /* The degree line under the institution, and nothing else. */
+  .edu-line.is-secondary {
+    margin-top: var(--sp-1);
+    color: var(--ink-3);
+    font-size: var(--fs-small);
+  }
+
+  @media (min-width: 48rem) {
+    .edu-row {
+      display: grid;
+      grid-template-columns: 9rem minmax(0, 1fr);
+      column-gap: var(--sp-5);
+      align-items: baseline;
+    }
+
+    .edu-detail {
+      grid-column: 2;
+    }
+
+    .edu-date + .edu-detail {
+      margin-top: 0;
+    }
+  }
+</style>
