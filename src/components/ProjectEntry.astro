@@ -129,7 +129,9 @@ const headingId = `project-${slug}`;
     color: var(--accent);
     font-family: var(--font-mono);
     font-size: var(--fs-mono);
-    font-weight: var(--fw-medium);
+    /* Regular, not medium: the accent colour is the emphasis here, and the
+       mono 500 face cost 14% of the font budget to serve six glyphs. */
+    font-weight: var(--fw-regular);
     letter-spacing: var(--tracking-mono);
     line-height: var(--lh-ui);
   }

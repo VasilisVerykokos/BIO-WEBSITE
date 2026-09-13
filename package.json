@@ -16,7 +16,10 @@
     "format:check": "prettier --check .",
     "astro": "astro",
     "a11y": "axe http://localhost:4321 --exit",
-    "a11y:ci": "npm run build && astro preview && npm run a11y && astro preview stop"
+    "a11y:ci": "npm run build && astro preview && npm run a11y && astro preview stop",
+    "fonts": "node scripts/subset-fonts.mjs",
+    "prebuild": "npm run fonts",
+    "lhci": "lhci autorun"
   },
   "allowScripts": {
     "esbuild": true,
@@ -37,6 +40,7 @@
     "@astrojs/check": "^0.9.10",
     "@axe-core/cli": "^4.13.0",
     "@eslint/js": "^10.0.1",
+    "@lhci/cli": "^0.15.1",
     "axe-core": "^4.13.0",
     "eslint": "^10.10.0",
     "eslint-plugin-astro": "^1.7.0",
@@ -44,6 +48,7 @@
     "globals": "^17.12.0",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^1.0.0",
+    "subset-font": "^2.7.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.70.0"
   }

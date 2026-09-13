@@ -10,124 +10,75 @@
    ========================================================================= */
 
 /* ----------------------------------------------------------------------------
-   0. FONT FACES — self-hosted woff2, zero third-party requests
+   0. FONT FACES — self-hosted, subsetted woff2, zero third-party requests
 
-   Subsets are hand-picked rather than pulled from Fontsource's bundled CSS,
-   which ships every subset the family has (Cyrillic, Vietnamese) whether the
-   site can render them or not.
+   These files are GENERATED. `scripts/subset-fonts.mjs` builds them from the
+   Fontsource packages and `npm run build` runs it first, so they are never
+   edited by hand and never stale.
 
-   NEWSREADER SHIPS NO GREEK SUBSET. DESIGN_SYSTEM §2 asks for one; the family
-   does not have it. The content's only Greek is the three government-portal
-   acronyms, which are technical identifiers and are set in mono — JetBrains
-   Mono does have Greek. See the Phase 1 report.
+   Fontsource's own cuts came to 210KB against MOBILE_SPEC §9's 120KB budget.
+   Subsetting to the characters this site can render, and clamping the variable
+   weight axes to the weights the design actually uses, brings that to 119KB.
+   The script fails the build if it ever climbs back over.
 
-   The `wght` files carry the weight axis only. Newsreader also publishes
-   `opsz` and `standard` cuts that add an optical-size axis; those are 2.3x
-   the bytes for an axis this design never varies.
+   One face per file now, rather than the latin / latin-ext pair Fontsource
+   ships — the subset spans both. The unicode-range on each still matters: it
+   is what makes an unsupported character fall through to the next family in
+   the stack instead of rendering as tofu.
+
+   NEWSREADER SHIPS NO GREEK. DESIGN_SYSTEM §2 asks for a Greek subset of it;
+   the family does not have one. The only Greek in the content is the three
+   government-portal acronyms, which are technical identifiers set in mono —
+   and JetBrains Mono does have Greek.
    -------------------------------------------------------------------------- */
 
-/* Newsreader — headings and prose. Weight axis 200-800, we use 300-500. */
+/* Newsreader — headings and prose. Axis clamped to 300-500. */
 @font-face {
   font-family: 'Newsreader Variable';
   font-style: normal;
   font-display: swap;
-  font-weight: 200 800;
-  src: url('@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2')
-    format('woff2-variations');
+  font-weight: 300 500;
+  src: url('../assets/fonts/newsreader-normal.woff2') format('woff2-variations');
   unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
-    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    U+0020-007E, U+00A0-00FF, U+2010-2015, U+2018-201E, U+2022, U+2026, U+2122,
+    U+2190-2193, U+2212, U+20AC;
 }
 
-@font-face {
-  font-family: 'Newsreader Variable';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 200 800;
-  src: url('@fontsource-variable/newsreader/files/newsreader-latin-ext-wght-normal.woff2')
-    format('woff2-variations');
-  unicode-range:
-    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
-    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
-    U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-/* Italic is a separate file, not an axis. It exists for one job: the surname
-   in the hero. Phase 12 subsets it to the glyphs actually set in italic. */
+/* Italic is a separate file, not an axis, and it exists for one word: the
+   surname in the hero. ASCII only, axis pinned to 400 — 63KB down to 13KB. */
 @font-face {
   font-family: 'Newsreader Variable';
   font-style: italic;
   font-display: swap;
-  font-weight: 200 800;
-  src: url('@fontsource-variable/newsreader/files/newsreader-latin-wght-italic.woff2')
-    format('woff2-variations');
-  unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
-    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  font-weight: 400;
+  src: url('../assets/fonts/newsreader-italic.woff2') format('woff2-variations');
+  unicode-range: U+0020-007E;
 }
 
-/* Inter — nav, eyebrow labels, meta, UI. Normal only; nothing in this design
-   is set in italic sans. */
+/* Inter — nav, eyebrow labels, meta, UI. Axis clamped to 400-600. */
 @font-face {
   font-family: 'Inter Variable';
   font-style: normal;
   font-display: swap;
-  font-weight: 100 900;
-  src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2')
-    format('woff2-variations');
+  font-weight: 400 600;
+  src: url('../assets/fonts/inter-normal.woff2') format('woff2-variations');
   unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
-    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    U+0020-007E, U+00A0-00FF, U+2010-2015, U+2018-201E, U+2022, U+2026, U+2122,
+    U+2190-2193, U+2212, U+20AC;
 }
 
-@font-face {
-  font-family: 'Inter Variable';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 100 900;
-  src: url('@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2')
-    format('woff2-variations');
-  unicode-range:
-    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
-    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
-    U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-/* JetBrains Mono — stack tags, metrics, spec-sheet values. The developer
-   signature. Latin per DESIGN_SYSTEM §2, plus Greek because this face is what
-   renders ΑΑΔΕ / ΓΕΜΗ / ΕΡΓΑΝΗ. Greek downloads only when Greek is rendered. */
+/* JetBrains Mono — stack tags, metrics, spec-sheet values, and the Greek
+   acronyms. One weight only: see the note in scripts/subset-fonts.mjs for why
+   500 was dropped. Nothing on the page requests it, so there is no faux-bold. */
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
   font-display: swap;
   font-weight: 400;
-  src: url('@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2')
-    format('woff2');
+  src: url('../assets/fonts/jetbrains-400.woff2') format('woff2');
   unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
-    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 400;
-  src: url('@fontsource/jetbrains-mono/files/jetbrains-mono-greek-400-normal.woff2')
-    format('woff2');
-  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
-}
-
-@font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 500;
-  src: url('@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2')
-    format('woff2');
-  unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
-    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    U+0020-007E, U+00A0, U+00A9, U+00AE, U+00B7, U+00D7, U+0386-03CE, U+2010-2015,
+    U+2018-201E, U+2022, U+2026, U+2122, U+2190-2193, U+2212, U+20AC;
 }
 
 /* ----------------------------------------------------------------------------
