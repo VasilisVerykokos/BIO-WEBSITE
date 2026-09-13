@@ -58,3 +58,51 @@ export const profileLinks = [
     text: 'verykokosvasileios@gmail.com',
   },
 ] as const;
+
+/**
+ * Hero copy, from CONTENT.md § Hero.
+ *
+ * `[[ AVAILABILITY DATE ]]` is blocker B7 and is left in the string on purpose.
+ * CONTENT.md asks for the brackets to stay visible in the source so the value
+ * cannot ship by accident, and the Phase 14 build guard greps dist/ for `[[`
+ * and fails the build if any survive. Do not replace it with a guess.
+ */
+export const hero = {
+  eyebrow: 'Full-stack developer — Java · Spring Boot · React',
+  givenName: 'Vasileios',
+  familyName: 'Verykokos',
+  positioning: 'First place, Huawei ICT Competition World Final 2026 — Shenzhen.',
+  deck: 'Applied Informatics graduate from the University of Macedonia. I build systems that model something real: wildfire spread over live terrain data, a multi-tenant accounting platform wired into Greek government APIs, and a market-signal engine that only speaks when something has actually changed.',
+  status: [
+    'Larissa · Athens · Thessaloniki · open to remote',
+    'Military obligations fulfilled',
+    'Available [[ AVAILABILITY DATE ]]',
+  ],
+} as const;
+
+/**
+ * The four hero actions. Short labels here; the footer carries the full URLs.
+ * Exactly one is primary — the CV — and it is the only one that takes the
+ * accent underline, which is accent role 2 of the three permitted.
+ */
+export const heroActions = [
+  { href: '/cv.pdf', text: 'Download CV', primary: true, label: 'Download CV as PDF' },
+  {
+    href: 'https://github.com/VasilisVerykokos',
+    text: 'GitHub',
+    primary: false,
+    label: 'GitHub profile',
+  },
+  {
+    href: 'https://linkedin.com/in/vasilis-verykokos',
+    text: 'LinkedIn',
+    primary: false,
+    label: 'LinkedIn profile',
+  },
+  {
+    href: 'mailto:verykokosvasileios@gmail.com',
+    text: 'Email',
+    primary: false,
+    label: 'Email Vasileios Verykokos',
+  },
+] as const;

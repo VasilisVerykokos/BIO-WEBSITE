@@ -130,6 +130,70 @@
     U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* ----------------------------------------------------------------------------
+   0b. METRIC-MATCHED FALLBACK FACES — MOBILE_SPEC §9
+
+   font-display: swap trades a flash of fallback text for never blocking the
+   render. The cost is that when the real face arrives, text re-wraps and
+   everything below it jumps. Measured on the hero that was 0.0796 of layout
+   shift from a single swap, against a budget of 0.05 for the whole page.
+
+   These faces give the fallback the web font's metrics, so the fallback and
+   the real thing occupy the same space and the swap moves nothing.
+
+   size-adjust is the ratio of the two fonts' advance widths over a sample of
+   this site's actual copy; the overrides are the web font's own ascent and
+   descent, divided by that ratio. Measured in Chrome via canvas TextMetrics —
+   Phase 12 should regenerate them from the font tables directly, which is
+   exact rather than empirical.
+
+   Known limitation: local() can only match a font the device already has.
+   Android ships none of Georgia, Arial, or Consolas, so there the stack falls
+   through to the unadjusted generic and the swap can still shift. That matters
+   — Galaxy A-series phones are a primary target — and Phase 12 should decide
+   whether to widen the local() lists or accept it.
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Newsreader Fallback';
+  src: local('Georgia'), local('Times New Roman'), local('Liberation Serif');
+  size-adjust: 97.37%;
+  ascent-override: 76%;
+  descent-override: 27.73%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Newsreader Fallback';
+  font-style: italic;
+  src:
+    local('Georgia Italic'), local('Times New Roman Italic'),
+    local('Liberation Serif Italic');
+  size-adjust: 91.51%;
+  ascent-override: 80.86%;
+  descent-override: 29.5%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Roboto'), local('Liberation Sans');
+  size-adjust: 104.27%;
+  ascent-override: 93.02%;
+  descent-override: 23.02%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'JetBrains Fallback';
+  src:
+    local('Consolas'), local('Menlo'), local('DejaVu Sans Mono'), local('Liberation Mono');
+  size-adjust: 109.13%;
+  ascent-override: 93.47%;
+  descent-override: 27.49%;
+  line-gap-override: 0%;
+}
+
 @layer tokens {
   :root {
     color-scheme: light;
@@ -174,11 +238,14 @@
        2. TYPOGRAPHY — DESIGN_SYSTEM §2
        -------------------------------------------------------------------- */
 
-    --font-serif: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+    --font-serif:
+      'Newsreader Variable', 'Newsreader Fallback', Georgia, 'Times New Roman', serif;
     --font-sans:
-      'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      'Inter Variable', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Roboto,
+      sans-serif;
     --font-mono:
-      'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+      'JetBrains Mono', 'JetBrains Fallback', ui-monospace, 'SFMono-Regular', Menlo,
+      Consolas, monospace;
 
     /* Fluid scale. Every size is a clamp() — this is how the layout stays
        right at 320px without a pile of media queries. */

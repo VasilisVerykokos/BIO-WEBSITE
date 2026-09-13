@@ -1,0 +1,244 @@
+---
+import { Picture } from 'astro:assets';
+import { hero, heroActions } from '../lib/site';
+import portrait from '../assets/portrait-placeholder-b8.png';
+---
+
+<section id="hero" class="hero" aria-labelledby="hero-name">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow">{hero.eyebrow}</p>
+
+      {/* The one borrowed move from the reference site: surname on its own
+          line, serif italic, in the accent. Accent role 1 of the permitted
+          three. Both halves live in one <h1> so the document outline stays a
+          single heading. */}
+      <h1 id="hero-name" class="hero-name">
+        <span class="hero-given">{hero.givenName}</span>
+        <span class="hero-family">{hero.familyName}</span>
+      </h1>
+
+      <p class="hero-positioning">{hero.positioning}</p>
+
+      <p class="hero-deck">{hero.deck}</p>
+
+      <p class="hero-status">
+        {hero.status.map((part, i) => (
+          <>
+            {i > 0 && <span class="hero-status-sep"> — </span>}
+            <span>{part}</span>
+          </>
+        ))}
+      </p>
+
+      <ul class="hero-actions" role="list">
+        {heroActions.map((action) => (
+          <li>
+            <a
+              href={action.href}
+              aria-label={action.label}
+              class:list={['hero-action', { 'is-primary': action.primary }]}
+            >
+              {action.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    {/* Portrait reflows below the copy on phones rather than shrinking into a
+        thumbnail beside it — the one thing the reference site's hero gets
+        right on mobile. */}
+    <figure class="hero-portrait">
+      <Picture
+        src={portrait}
+        alt="Placeholder graphic. The portrait photograph has not been supplied yet — blocker B8."
+        formats={['avif', 'webp']}
+        fallbackFormat="jpeg"
+        widths={[180, 240, 360, 480, 600]}
+        sizes="(min-width: 64rem) 260px, 180px"
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+      />
+      <figcaption>PLACEHOLDER — B8</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  /* MOBILE_SPEC / BUILD_PLAN 3.7 — no full-height hero, and no 100vh anywhere.
+     The awards section has to peek above the fold on a 812px phone so the page
+     reads as having depth rather than as a splash screen. */
+  .hero {
+    background-color: var(--paper);
+  }
+
+  .hero-inner {
+    padding-top: var(--sp-5);
+    padding-bottom: var(--sp-6);
+  }
+
+  /* ------------------------------------------------------------------------
+     Copy
+     ---------------------------------------------------------------------- */
+
+  .eyebrow {
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-label);
+    line-height: var(--lh-ui);
+    text-transform: uppercase;
+  }
+
+  .hero-name {
+    margin-top: var(--sp-3);
+  }
+
+  .hero-given,
+  .hero-family {
+    display: block;
+  }
+
+  .hero-family {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .hero-positioning {
+    margin-top: var(--sp-4);
+    max-width: var(--measure);
+    color: var(--ink);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-head);
+  }
+
+  .hero-deck {
+    margin-top: var(--sp-4);
+    max-width: var(--measure);
+    color: var(--ink-2);
+  }
+
+  /* Mono, --muted, and allowed to wrap to two lines at 320px. The separator is
+     a span so the line can break at the em-dash instead of mid-phrase. */
+  .hero-status {
+    margin-top: var(--sp-4);
+    max-width: var(--measure);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    letter-spacing: var(--tracking-mono);
+    line-height: var(--lh-ui);
+  }
+
+  .hero-status-sep {
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------------------
+     Actions — wrap-friendly, every one a real 44px target with >= 8px clear
+     space between neighbours (MOBILE_SPEC §2).
+     ---------------------------------------------------------------------- */
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    margin: var(--sp-4) 0 0;
+    padding: 0;
+  }
+
+  .hero-action {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    min-width: var(--tap-min);
+    justify-content: center;
+    padding-inline: var(--sp-3);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-ui);
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.2em;
+  }
+
+  /* Exactly one primary. Quiet everywhere else — a screen where you can count
+     the accent on one hand is the whole discipline. */
+  .hero-action.is-primary {
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: var(--focus-width);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hero-action:hover {
+      color: var(--accent);
+      text-decoration-color: var(--accent);
+    }
+  }
+
+  .hero-action:focus-visible {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+
+  /* ------------------------------------------------------------------------
+     Portrait
+
+     Explicit intrinsic dimensions come from the source image, and the CSS only
+     constrains the width — so the box is reserved before the bytes arrive and
+     the hero contributes nothing to CLS.
+     ---------------------------------------------------------------------- */
+
+  .hero-portrait {
+    margin: var(--sp-5) 0 0;
+  }
+
+  .hero-portrait :global(picture),
+  .hero-portrait :global(img) {
+    width: 8.75rem; /* 140px — well under the 200px mobile cap in MOBILE_SPEC §8 */
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: var(--radius-round);
+    object-fit: cover;
+  }
+
+  /* Deleted along with the placeholder when B8 lands. */
+  .hero-portrait figcaption {
+    margin-top: var(--sp-2);
+    width: 8.75rem;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-mono);
+    text-align: center;
+  }
+
+  /* ------------------------------------------------------------------------
+     Desktop — two columns, copy left, portrait right.
+     ---------------------------------------------------------------------- */
+
+  @media (min-width: 64rem) {
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: var(--sp-8);
+      padding-top: var(--sp-8);
+      padding-bottom: var(--sp-9);
+    }
+
+    .hero-portrait {
+      margin-top: var(--sp-2);
+    }
+
+    .hero-portrait :global(img),
+    .hero-portrait figcaption {
+      width: 16.25rem; /* 260px */
+    }
+  }
+</style>
