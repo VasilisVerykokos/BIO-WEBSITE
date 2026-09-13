@@ -20,7 +20,10 @@ import portrait from '../assets/portrait-placeholder-b8.png';
 
       <p class="hero-positioning">{hero.positioning}</p>
 
-      <p class="hero-deck">{hero.deck}</p>
+      <p class="hero-deck">
+        <span class="hero-deck-lead">{hero.deck.lead}&#32;</span>
+        <span>{hero.deck.body}</span>
+      </p>
 
       <p class="hero-status">
         {hero.status.map((part, i) => (
@@ -83,16 +86,6 @@ import portrait from '../assets/portrait-placeholder-b8.png';
      Copy
      ---------------------------------------------------------------------- */
 
-  .eyebrow {
-    color: var(--muted);
-    font-family: var(--font-sans);
-    font-size: var(--fs-label);
-    font-weight: var(--fw-semibold);
-    letter-spacing: var(--tracking-label);
-    line-height: var(--lh-ui);
-    text-transform: uppercase;
-  }
-
   .hero-name {
     margin-top: var(--sp-3);
   }
@@ -119,6 +112,20 @@ import portrait from '../assets/portrait-placeholder-b8.png';
     margin-top: var(--sp-4);
     max-width: var(--measure);
     color: var(--ink-2);
+  }
+
+  /* The lead sentence costs two lines on a phone and repeats what About and
+     Education already say. It is withheld below 768px so the Awards section
+     clears the fold — BUILD_PLAN 3.7 — and restored in full above it, where
+     the deck is the 2-3 lines CONTENT.md describes. */
+  .hero-deck-lead {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    .hero-deck-lead {
+      display: inline;
+    }
   }
 
   /* Mono, --muted, and allowed to wrap to two lines at 320px. The separator is

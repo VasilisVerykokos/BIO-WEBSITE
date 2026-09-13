@@ -72,7 +72,16 @@ export const hero = {
   givenName: 'Vasileios',
   familyName: 'Verykokos',
   positioning: 'First place, Huawei ICT Competition World Final 2026 — Shenzhen.',
-  deck: 'Applied Informatics graduate from the University of Macedonia. I build systems that model something real: wildfire spread over live terrain data, a multi-tenant accounting platform wired into Greek government APIs, and a market-signal engine that only speaks when something has actually changed.',
+  /**
+   * Split at the sentence boundary so phones can show the second sentence
+   * alone. Not a rewrite — both halves are CONTENT.md's words, unedited. The
+   * lead sentence is the one that repeats in About and Education, which is why
+   * it is the half that gives way when vertical space is short.
+   */
+  deck: {
+    lead: 'Applied Informatics graduate from the University of Macedonia.',
+    body: 'I build systems that model something real: wildfire spread over live terrain data, a multi-tenant accounting platform wired into Greek government APIs, and a market-signal engine that only speaks when something has actually changed.',
+  },
   status: [
     'Larissa · Athens · Thessaloniki · open to remote',
     'Military obligations fulfilled',
@@ -104,5 +113,52 @@ export const heroActions = [
     text: 'Email',
     primary: false,
     label: 'Email Vasileios Verykokos',
+  },
+] as const;
+
+/**
+ * Awards, from CONTENT.md § Awards.
+ *
+ * Bracketed strings are blockers and stay visible in the source and on the
+ * page so they cannot ship unnoticed — the Phase 14 guard greps dist/ for `[[`.
+ * They are shortened from CONTENT.md's wording, which is written as an
+ * instruction to Vasilis rather than as display copy: the full note for each
+ * one lives in TODO-VASILIS.md. Nothing is invented, and each keeps its
+ * blocker id so the two files stay traceable to each other.
+ *
+ * `featured` marks the single strongest credential on the page. It is the only
+ * place --accent-soft is used anywhere on the site.
+ */
+export const awards = [
+  {
+    title: '1st place — Huawei ICT Competition, World Final',
+    context:
+      'Innovation Track. Shenzhen, China, with team AEGIS. [[ B2 — 1st of N teams from M countries ]]',
+    date: 'June 2026',
+    featured: true,
+  },
+  {
+    title: '1st place — Huawei ICT Competition, European Final',
+    context: 'Innovation Track, with team AEGIS. [[ B2 — N teams ]]',
+    date: 'May 2026',
+    featured: false,
+  },
+  {
+    title: '1st place — "Unboxed by PwC" AI Hackathon',
+    context: 'With team AEGIS.',
+    date: 'December 2025',
+    featured: false,
+  },
+  {
+    title: 'Exhibitor — Thessaloniki International Fair',
+    context: 'Showcased AEGIS with the team.',
+    date: '[[ B4 — DATE UNVERIFIED ]]',
+    featured: false,
+  },
+  {
+    title: 'Scholarship — Municipality of Larissa',
+    context: 'For academic performance at secondary school and university.',
+    date: '2021 — present',
+    featured: false,
   },
 ] as const;

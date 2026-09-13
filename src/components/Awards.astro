@@ -1,0 +1,132 @@
+---
+import { awards } from '../lib/site';
+---
+
+<section id="awards" data-tint="paper-2" aria-labelledby="awards-heading">
+  <div class="container section-inner">
+    <p class="eyebrow">Recognition</p>
+    <h2 id="awards-heading" class="section-heading">
+      Competition results
+    </h2>
+
+    <ol class="awards" role="list">
+      {awards.map((award) => (
+        <li class:list={['award', { 'is-featured': award.featured }]}>
+          {/* Date first in the DOM. On a phone that is exactly where it
+                should read — a small mono line above the title. On desktop the
+                grid lifts it to the right of the title on a shared baseline,
+                without the markup having to change. */}
+          <p class="award-date">{award.date}</p>
+          <h3 class="award-title">{award.title}</h3>
+          <p class="award-context">{award.context}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .awards {
+    margin: var(--sp-6) 0 0;
+    padding: 0;
+  }
+
+  /* Hairline rules and whitespace. No cards, no shadows — separation comes
+     from the tint ladder and a 1px line, per DESIGN_SYSTEM §4.7. */
+  .award {
+    padding-block: var(--sp-5);
+  }
+
+  .award + .award {
+    border-top: var(--rule) solid var(--line);
+  }
+
+  .award-date {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    letter-spacing: var(--tracking-mono);
+    line-height: var(--lh-ui);
+  }
+
+  .award-title {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-medium);
+  }
+
+  .award-context {
+    margin-top: var(--sp-2);
+    max-width: var(--measure);
+    color: var(--ink-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-ui);
+  }
+
+  /* --------------------------------------------------------------------------
+     The one row that matters
+
+     This is the page's strongest credential, so it is treated as a headline
+     rather than a list item: a larger title and the only accent-tinted wash
+     anywhere on the site. Used exactly once. Everything else stays quiet,
+     which is the only reason this reads as emphasis at all.
+
+     The wash bleeds --sp-4 (16px) past the text column on each side. The
+     gutter is never narrower than 20px, so it cannot reach the viewport edge
+     and cannot cause horizontal overflow at 320px.
+     ------------------------------------------------------------------------ */
+
+  .award.is-featured {
+    background-color: var(--accent-soft);
+    padding-inline: var(--sp-4);
+    margin-inline: calc(-1 * var(--sp-4));
+    border-radius: var(--radius);
+  }
+
+  .award.is-featured .award-title {
+    /* --fs-h2 rather than a new size: the section already sets type at this
+       scale, so emphasis costs no extra step on the type ladder. */
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-regular);
+  }
+
+  .award.is-featured + .award {
+    border-top: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     Desktop — title left, date right, shared baseline.
+     ------------------------------------------------------------------------ */
+
+  @media (min-width: 48rem) {
+    .award {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: var(--sp-5);
+      align-items: baseline;
+    }
+
+    .award-date {
+      grid-column: 2;
+      grid-row: 1;
+      margin-top: 0;
+      text-align: right;
+
+      /* A date that breaks across two lines next to a wrapping title is where
+         these layouts look cheap. The column is auto-width, so it always has
+         room for the whole string. */
+      white-space: nowrap;
+    }
+
+    .award-title {
+      grid-column: 1;
+      grid-row: 1;
+      margin-top: 0;
+    }
+
+    .award-context {
+      grid-column: 1;
+      grid-row: 2;
+    }
+  }
+</style>

@@ -53,14 +53,20 @@ of these can ship by accident.
 | ID | Placeholder in source | Section | Phase |
 |---|---|---|---|
 | B7 | `[[ AVAILABILITY DATE ]]` | Hero status line | 3 |
-| B2 | `[[ 1st of N teams from M countries ]]` | Awards — Huawei World Final | 4 |
-| B2 | `[[ N teams ]]` | Awards — Huawei European Final | 4 |
-| B4 | `[[ VERIFY DATE — the CV lists September 2026, out of sequence ]]` | Awards — Thessaloniki International Fair | 4 |
+| B2 | `[[ B2 — 1st of N teams from M countries ]]` | Awards — Huawei World Final | 4 |
+| B2 | `[[ B2 — N teams ]]` | Awards — Huawei European Final | 4 |
+| B4 | `[[ B4 — DATE UNVERIFIED ]]` | Awards — Thessaloniki International Fair | 4 |
 | B1 | `[[ REPO OR "private — available on request" ]]` | Work 01 — AEGIS links | 5 |
 | B5 | `[[ N ]]` forward-only migrations | Work 02 — the hard part | 5 |
 | B5 | `[[ N ]]` tests | Work 02 — the hard part | 5 |
 | B11 | `[[ CONFIRM WHICH TO NAME PUBLICLY ]]` | Work 02 — government integrations | 5 |
 | B6 | `[[ CONFIRM: publish publicly or email-only? ]]` | Contact — phone number | 8 |
+
+The three Awards strings are shortened from CONTENT.md's wording, which reads as
+an instruction to you rather than as display copy — these render on the page, so
+they carry the blocker id and the short form. The full note for B4 is: the CV
+lists September 2026, which is out of sequence. Nothing was invented and nothing
+was dropped.
 
 **B11 is not in the original table** — it is a tenth `[[ ]]` found in CONTENT.md line 125.
 Decide whether ΑΑΔΕ (myDATA), ΓΕΜΗ, and ΕΡΓΑΝΗ can all be named publicly, or only some.
