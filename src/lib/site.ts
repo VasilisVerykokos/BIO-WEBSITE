@@ -162,3 +162,35 @@ export const awards = [
     featured: false,
   },
 ] as const;
+
+/**
+ * Skills, from CONTENT.md § Skills.
+ *
+ * Plain grouped text. No proficiency bars, no percentages, no star ratings, no
+ * logo grid, no years-of-experience counters — BUILD_PLAN Phase 6 forbids all
+ * of them, and they are the fastest way to make a portfolio look junior.
+ *
+ * (The CV lists Git twice. It appears once here.)
+ */
+export const skillGroups = [
+  {
+    label: 'Languages',
+    items: ['Java', 'Python', 'TypeScript', 'JavaScript', 'SQL', 'C'],
+  },
+  {
+    label: 'Backend',
+    items: ['Spring Boot', 'REST APIs', 'JWT', 'JUnit', 'Maven'],
+  },
+  {
+    label: 'Frontend',
+    items: ['React', 'Vite', 'Tailwind CSS', 'Leaflet', 'Recharts'],
+  },
+  {
+    label: 'Data',
+    items: ['PostgreSQL', 'Supabase', 'Pandas', 'NumPy'],
+  },
+  {
+    label: 'Tools',
+    items: ['Git', 'Docker', 'Linux', 'BPMN', 'DMN'],
+  },
+] as const;

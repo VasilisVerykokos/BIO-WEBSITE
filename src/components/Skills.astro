@@ -1,0 +1,103 @@
+---
+import { skillGroups } from '../lib/site';
+---
+
+<section id="skills" data-tint="paper-2" aria-labelledby="skills-heading">
+  <div class="container section-inner">
+    <p class="eyebrow">Tools</p>
+    <h2 id="skills-heading" class="section-heading">
+      What I work with
+    </h2>
+
+    <dl class="skills">
+      {skillGroups.map((group) => (
+        <div class="skill-group">
+          <dt>{group.label}</dt>
+          <dd>
+            <ul role="list">
+              {group.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .skills {
+    margin: var(--sp-6) 0 0;
+  }
+
+  /* Mobile: label above, items wrapping freely underneath.
+     MOBILE_SPEC §5 calls this "a compact grouped list, not a grid of logo
+     cards", so the gap between groups is one step tighter than the usual
+     block rhythm. */
+  .skill-group + .skill-group {
+    margin-top: var(--sp-4);
+  }
+
+  dt {
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-label);
+    line-height: var(--lh-ui);
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: var(--sp-2) 0 0;
+  }
+
+  dd ul {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+
+    /* Row gap only. The horizontal separation is the interpunct, which belongs
+       to the item before it so a line break can never leave one stranded at
+       the start of a line. */
+    row-gap: var(--sp-1);
+  }
+
+  li {
+    color: var(--ink-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    letter-spacing: var(--tracking-mono);
+    line-height: var(--lh-ui);
+
+    /* Individual items are short, but the guarantee matters at 320px: no
+       single token may push the row wider than the viewport. */
+    overflow-wrap: anywhere;
+  }
+
+  li:not(:last-child)::after {
+    content: ' · ';
+    color: var(--muted);
+    white-space: pre;
+  }
+
+  /* Desktop: label column, items column. */
+  @media (min-width: 48rem) {
+    .skill-group {
+      display: grid;
+      grid-template-columns: 7rem minmax(0, 1fr);
+      column-gap: var(--sp-5);
+      align-items: baseline;
+    }
+
+    .skill-group + .skill-group {
+      margin-top: var(--sp-4);
+    }
+
+    dd {
+      margin-top: 0;
+    }
+  }
+</style>
