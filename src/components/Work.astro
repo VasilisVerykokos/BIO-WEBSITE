@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectEntry from './ProjectEntry.astro';
+
+// Three case studies, not six. MOBILE_SPEC §5 — the page-length budget is the
+// reason this section is a shortlist rather than an archive.
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<section id="work" data-tint="paper" aria-labelledby="work-heading">
+  <div class="container section-inner">
+    <p class="eyebrow">Selected work</p>
+    <h2 id="work-heading" class="section-heading">
+      Three things I built
+    </h2>
+
+    <div class="work-list">
+      {projects.map((project) => (
+        <ProjectEntry project={project.data} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .work-list {
+    margin-top: var(--sp-6);
+  }
+</style>

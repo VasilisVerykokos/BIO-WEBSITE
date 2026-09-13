@@ -1,0 +1,321 @@
+---
+import SpecSheet from './SpecSheet.astro';
+import MediaStrip from './MediaStrip.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>['data'];
+}
+
+const { project } = Astro.props;
+const number = String(project.order).padStart(2, '0');
+const slug = project.title
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/(^-|-$)/g, '');
+const headingId = `project-${slug}`;
+---
+
+<article class="project" aria-labelledby={headingId}>
+  <header class="project-head">
+    {/* Accent role 3 of the three permitted: the section number. Aligned to
+        the heading's first baseline, adapted from the 01-05 treatment in the
+        reference audit. */}
+    <p class="project-number" aria-hidden="true">
+      {number}
+    </p>
+
+    <div>
+      <h3 id={headingId} class="project-title">
+        {project.title}
+      </h3>
+      <p class="project-meta">
+        <span>{project.subtitle}</span>
+        <span aria-hidden="true"> · </span>
+        <span>{project.year}</span>
+        <span aria-hidden="true"> · </span>
+        <span>{project.role}</span>
+      </p>
+    </div>
+  </header>
+
+  <p class="project-problem">{project.problem}</p>
+
+  {/* The most important paragraph on the site. It gets --fs-lead and it is
+      never inside the expander — everything below it can be folded away on a
+      phone, this cannot. */}
+  <div class="hard-part">
+    <h4 class="hard-part__label">The hard part</h4>
+    <p class="hard-part__text">{project.hardPart}</p>
+  </div>
+
+  {/* The demo video stays outside the expander. It is the single
+      highest-impact artifact on the page and hiding it behind a tap on the one
+      project that has one would be the wrong trade. */}
+  <MediaStrip count={0} hasVideo={project.hasVideo} projectTitle={project.title} />
+
+  {/*
+    Length control, MOBILE_SPEC §5. A real <details>, not a scripted accordion:
+    it opens with zero JavaScript, it is keyboard-operable for free, and screen
+    readers already know what it is.
+
+    Above 1024px it is forced open by CSS and the summary is hidden, so desktop
+    reads as one continuous entry. That rule sits behind
+    @supports selector(::details-content) on purpose — if a browser does not
+    support it the summary stays visible and the content is one tap away,
+    rather than being sealed behind a control that has been display:none'd.
+  */}
+  <details class="tech-details">
+    <summary>
+      <span>Technical detail</span>
+      <span class="tech-details__chevron" aria-hidden="true">
+        ↓
+      </span>
+    </summary>
+
+    <div class="tech-details__body">
+      <h4 class="also-built__label">Also built</h4>
+      <ul class="also-built" role="list">
+        {project.alsoBuilt.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+
+      <SpecSheet rows={project.spec} />
+
+      {/* Screenshots live in here on mobile. MOBILE_SPEC §5 puts deeper
+          engineering detail behind the expander, and three strips cost 615px
+          of a 7000px page budget — more than the entire Skills section. On
+          desktop the expander is forced open, so nothing is hidden there. */}
+      <MediaStrip
+        count={project.screenshotCount}
+        hasVideo={false}
+        projectTitle={project.title}
+      />
+    </div>
+  </details>
+
+  <ul class="project-links" role="list">
+    {project.links.map((link) => (
+      <li>
+        {link.href ? <a href={link.href}>{link.text}</a> : <span>{link.text}</span>}
+      </li>
+    ))}
+  </ul>
+</article>
+
+<style>
+  .project {
+    padding-block: var(--sp-7);
+  }
+
+  .project + .project,
+  .project {
+    border-top: var(--rule) solid var(--line);
+  }
+
+  /* ------------------------------------------------------------------------
+     Head
+     ---------------------------------------------------------------------- */
+
+  .project-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--sp-4);
+    align-items: baseline;
+  }
+
+  .project-number {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-mono);
+    line-height: var(--lh-ui);
+  }
+
+  .project-title {
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-regular);
+  }
+
+  .project-meta {
+    margin-top: var(--sp-2);
+    color: var(--ink-3);
+    font-family: var(--font-sans);
+    font-size: var(--fs-small);
+    line-height: var(--lh-ui);
+  }
+
+  .project-problem {
+    margin-top: var(--sp-5);
+    max-width: var(--measure);
+    color: var(--ink-2);
+  }
+
+  /* ------------------------------------------------------------------------
+     The hard part
+     ---------------------------------------------------------------------- */
+
+  .hard-part {
+    margin-top: var(--sp-5);
+    border-left: var(--focus-width) solid var(--line-strong);
+    padding-left: var(--sp-4);
+  }
+
+  .hard-part__label {
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-label);
+    line-height: var(--lh-ui);
+    text-transform: uppercase;
+  }
+
+  .hard-part__text {
+    margin-top: var(--sp-2);
+    max-width: var(--measure);
+    color: var(--ink);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-body);
+  }
+
+  /* ------------------------------------------------------------------------
+     Expander
+     ---------------------------------------------------------------------- */
+
+  .tech-details {
+    margin-top: var(--sp-5);
+    border-top: var(--rule) solid var(--line);
+  }
+
+  .tech-details > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+
+    /* >= 48px target, MOBILE_SPEC §5. */
+    min-height: var(--tap-menu);
+
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-label);
+    line-height: var(--lh-ui);
+    text-transform: uppercase;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .tech-details > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .tech-details[open] .tech-details__chevron {
+    rotate: 180deg;
+  }
+
+  .tech-details__chevron {
+    color: var(--muted);
+    transition: rotate var(--dur-base) var(--ease);
+  }
+
+  .tech-details__body {
+    padding-bottom: var(--sp-4);
+  }
+
+  .also-built__label {
+    margin-top: var(--sp-2);
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .also-built {
+    margin: var(--sp-3) 0 var(--sp-6);
+    padding: 0;
+    display: grid;
+    gap: var(--sp-2);
+    max-width: var(--measure);
+  }
+
+  .also-built li {
+    position: relative;
+    padding-left: var(--sp-4);
+    color: var(--ink-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-ui);
+  }
+
+  .also-built li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+  }
+
+  /* ------------------------------------------------------------------------
+     Links
+     ---------------------------------------------------------------------- */
+
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-4);
+    margin: var(--sp-5) 0 0;
+    padding: 0;
+  }
+
+  .project-links li {
+    display: flex;
+  }
+
+  .project-links a,
+  .project-links span {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    letter-spacing: var(--tracking-mono);
+    overflow-wrap: anywhere;
+  }
+
+  .project-links a {
+    color: var(--ink);
+  }
+
+  /* ------------------------------------------------------------------------
+     Desktop: the expander stops being an expander.
+     ---------------------------------------------------------------------- */
+
+  @media (min-width: 64rem) {
+    .project {
+      padding-block: var(--sp-8);
+    }
+  }
+
+  @supports selector(::details-content) {
+    @media (min-width: 64rem) {
+      .tech-details > summary {
+        display: none;
+      }
+
+      .tech-details::details-content {
+        content-visibility: visible;
+        block-size: auto;
+      }
+
+      .tech-details__body {
+        padding-top: var(--sp-5);
+      }
+    }
+  }
+</style>

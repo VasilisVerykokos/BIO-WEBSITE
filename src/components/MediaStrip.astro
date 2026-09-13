@@ -1,0 +1,191 @@
+---
+import { Picture } from 'astro:assets';
+import shot from '../assets/screenshot-placeholder-b9.png';
+import poster from '../assets/video-poster-placeholder-b3.png';
+
+/**
+ * Screenshots, and for AEGIS the demo-video facade.
+ *
+ * Every image here is a labelled placeholder. B9 (real screenshots) and B3
+ * (the demo video) are unresolved, and Phase 0.4 is explicit that a
+ * placeholder must be obviously a placeholder rather than a stock image that
+ * could survive to production.
+ *
+ * The video is a facade, not an embed: a poster and a real button. MOBILE_SPEC
+ * §8 forbids shipping the player on first load — a YouTube iframe is roughly a
+ * megabyte, which is twice this site's entire page budget. Nothing is wired to
+ * the button until B3 supplies something to play, so it is rendered disabled
+ * rather than as a control that lies about what it does.
+ */
+interface Props {
+  count: number;
+  hasVideo: boolean;
+  projectTitle: string;
+}
+
+const { count, hasVideo, projectTitle } = Astro.props;
+const shots = Array.from({ length: count }, (_, i) => i + 1);
+---
+
+{hasVideo && (
+  <figure class="video-facade">
+    <Picture
+      src={poster}
+      alt={`Placeholder graphic standing in for the ${projectTitle} demo video poster — blocker B3.`}
+      formats={['avif', 'webp']}
+      fallbackFormat="jpeg"
+      widths={[320, 480, 640, 960]}
+      sizes="(min-width: 64rem) 640px, 100vw"
+      loading="lazy"
+      decoding="async"
+    />
+    <button type="button" class="video-play" disabled aria-describedby="video-blocked">
+      <span class="video-play__triangle" aria-hidden="true" />
+      <span class="visually-hidden">Play the {projectTitle} demo video</span>
+    </button>
+    <figcaption id="video-blocked">
+      PLACEHOLDER — B3 · demo video not yet hosted
+    </figcaption>
+  </figure>
+)}
+
+{count > 0 && (
+  <div
+    class="strip-wrap"
+    role="region"
+    tabindex="0"
+    aria-label={`${projectTitle} screenshots, scrollable`}
+  >
+    <ul class="strip" role="list">
+      {shots.map((n) => (
+        <li>
+          <figure>
+            <Picture
+              src={shot}
+              alt={`Placeholder graphic standing in for ${projectTitle} screenshot ${n} — blocker B9.`}
+              formats={['avif', 'webp']}
+              fallbackFormat="jpeg"
+              widths={[320, 480, 640]}
+              sizes="(min-width: 64rem) 420px, 80vw"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>PLACEHOLDER — B9 · screenshot {n}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+<style>
+  /* --------------------------------------------------------------------------
+     Video facade
+     ------------------------------------------------------------------------ */
+
+  .video-facade {
+    position: relative;
+    margin: var(--sp-5) 0 0;
+  }
+
+  .video-facade :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+  }
+
+  /* >= 56px, per MOBILE_SPEC §8. Centred over the poster. */
+  .video-play {
+    position: absolute;
+    top: calc(50% - var(--sp-7));
+    left: 50%;
+    translate: -50% -50%;
+    display: grid;
+    place-items: center;
+    width: var(--sp-8);
+    height: var(--sp-8);
+    border-radius: var(--radius-round);
+    background-color: var(--paper);
+    border: var(--rule) solid var(--line-strong);
+  }
+
+  .video-play[disabled] {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
+  .video-play__triangle {
+    width: 0;
+    height: 0;
+    margin-left: var(--sp-1);
+    border-top: var(--sp-3) solid transparent;
+    border-bottom: var(--sp-3) solid transparent;
+    border-left: var(--sp-4) solid var(--ink);
+  }
+
+  .video-facade figcaption,
+  .strip figcaption {
+    margin-top: var(--sp-2);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-mono);
+  }
+
+  /* --------------------------------------------------------------------------
+     Screenshot strip — scroll-snap, never an auto-advancing carousel.
+     ------------------------------------------------------------------------ */
+
+  /* The scroll container is the wrapper, not the list, so that the thing
+     taking keyboard focus is a labelled region rather than a bare <ul>. */
+  .strip-wrap {
+    margin-top: var(--sp-5);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+    /* MOBILE_SPEC §10 — stops the swipe from triggering the browser's
+       back gesture when the strip reaches its end. */
+    overscroll-behavior-x: contain;
+
+    /* The visible affordance: the second item is deliberately clipped at the
+       right edge so it is obvious there is more to scroll to. */
+    scrollbar-width: thin;
+  }
+
+  .strip {
+    display: flex;
+    gap: var(--sp-4);
+    margin: 0;
+    padding: 0 0 var(--sp-2);
+  }
+
+  .strip > li {
+    flex: 0 0 80%;
+    scroll-snap-align: start;
+  }
+
+  .strip :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+  }
+
+  .strip figure {
+    margin: 0;
+  }
+
+  @media (min-width: 48rem) {
+    .strip > li {
+      flex-basis: 26.25rem; /* 420px */
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .video-facade :global(img) {
+      max-width: 40rem;
+    }
+  }
+</style>

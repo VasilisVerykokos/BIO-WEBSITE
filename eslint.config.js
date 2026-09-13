@@ -49,6 +49,18 @@ export default defineConfig(
        * is still an error.
        */
       'astro/jsx-a11y/no-redundant-roles': ['error', { ul: ['list'], ol: ['list'] }],
+
+      /**
+       * A horizontally scrollable region must be reachable by keyboard, or
+       * someone who cannot swipe cannot see the second screenshot. axe enforces
+       * exactly that (scrollable-region-focusable); this rule flags the
+       * tabindex that satisfies it. Allowing it only on a labelled region or
+       * group — a bare div with tabindex is still an error.
+       */
+      'astro/jsx-a11y/no-noninteractive-tabindex': [
+        'error',
+        { tags: [], roles: ['tabpanel', 'region', 'group'], allowExpressionValues: true },
+      ],
     },
   },
 

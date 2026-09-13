@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import Awards from '../components/Awards.astro';
+import Work from '../components/Work.astro';
 
 /**
  * The page.
@@ -20,7 +21,6 @@ import Awards from '../components/Awards.astro';
  * and the Phase 14 build guard is a second line of defence.
  */
 const stubs = [
-  { id: 'work', title: 'Work', phase: 5, tint: 'paper' },
   { id: 'skills', title: 'Skills', phase: 6, tint: 'paper-2' },
   { id: 'about', title: 'About', phase: 7, tint: 'paper' },
   { id: 'education', title: 'Education', phase: 7, tint: 'paper-2' },
@@ -31,6 +31,7 @@ const stubs = [
 <BaseLayout>
   <Hero />
   <Awards />
+  <Work />
 
   {stubs.map((stub) => (
     <section id={stub.id} aria-labelledby={`${stub.id}-heading`} data-tint={stub.tint}>

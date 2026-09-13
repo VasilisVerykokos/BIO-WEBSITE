@@ -1,0 +1,30 @@
+{
+  "order": 3,
+  "title": "Signal",
+  "subtitle": "Stock technical-analysis dashboard",
+  "year": "2026",
+  "role": "Solo",
+  "problem": "A dashboard that watches a watchlist of symbols and tells you when something actually changed — not one that repeats the same alert every day.",
+  "hardPart": "A naive indicator dashboard says \"RSI is overbought\" every day until it isn't, which trains you to ignore it. I built the signal engine as a state machine over the indicator series: it fires on transitions — a moving-average crossover, a MACD cross, the moment price crosses into an overbought band — and stays silent while a condition merely persists. All 14 indicators are implemented from scratch rather than pulled from a library, which is the only way I'd trust the transition boundaries.",
+  "alsoBuilt": [
+    "14 indicators from scratch — RSI, MACD, Bollinger Bands, Stochastic, and others",
+    "Live prices from the Twelve Data API with a CSV path for offline use",
+    "Symbol comparison, watchlist, date filtering, chart export"
+  ],
+  "spec": [
+    { "label": "Role", "value": "Solo" },
+    { "label": "Stack", "value": "React · TypeScript · Recharts" },
+    { "label": "Data", "value": "Twelve Data API · CSV fallback" },
+    { "label": "Core", "value": "14 indicators implemented from scratch" },
+    {
+      "label": "Design",
+      "value": "Transition-triggered signal engine — no repeat alerts"
+    }
+  ],
+  "links": [
+    { "text": "Live demo — [[ B1 — NOT YET DEPLOYED ]]" },
+    { "text": "Public repo — [[ B1 — MAKE THIS ONE PUBLIC FIRST ]]" }
+  ],
+  "screenshotCount": 2,
+  "hasVideo": false
+}

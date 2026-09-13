@@ -1,0 +1,34 @@
+{
+  "order": 1,
+  "title": "AEGIS",
+  "subtitle": "Crisis management platform",
+  "year": "2025—2026",
+  "role": "Sole developer of the entire interface",
+  "problem": "An operations centre for rescue teams, plus a companion app that lets citizens report incidents — built for the Huawei ICT Competition Innovation Track and taken to first place at both the European and World finals.",
+  "hardPart": "Predicting where a wildfire goes next, in a browser, with no server behind it. I implemented the Rothermel spread model with slope correction, feeding it 30-metre elevation data from ASTER and hourly wind forecasts from Open-Meteo, then used Turf.js to turn the model output into geometry the map could actually draw: four-hour prediction zones, directional fire rays, and downwind ember-spotting polygons. It runs entirely client-side, so the operations centre keeps working when connectivity doesn't.",
+  "alsoBuilt": [
+    "Tactical Leaflet map — drawing tools, route plotting, heatmaps, live satellite fire hotspots from NASA FIRMS",
+    "Voice control in six languages via the Web Speech API",
+    "Edited the demo videos presented at the European and World finals"
+  ],
+  "spec": [
+    { "label": "Role", "value": "Sole developer — full interface, both applications" },
+    { "label": "Stack", "value": "React · Leaflet · Turf.js · Web Speech API" },
+    { "label": "Data", "value": "ASTER 30 m DEM · Open-Meteo · NASA FIRMS" },
+    {
+      "label": "Model",
+      "value": "Rothermel spread with slope correction, 4-hour horizon"
+    },
+    {
+      "label": "Scope",
+      "value": "Operations centre + citizen companion app · 6 languages"
+    },
+    { "label": "Result", "value": "1st place — Huawei ICT World Final, Shenzhen" }
+  ],
+  "links": [
+    { "text": "Demo video — [[ B3 — NOT YET HOSTED ]]" },
+    { "text": "[[ B1 — REPO, OR \"private, available on request\" ]]" }
+  ],
+  "screenshotCount": 2,
+  "hasVideo": true
+}

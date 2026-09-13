@@ -1,0 +1,107 @@
+---
+/**
+ * The signature component — DESIGN_SYSTEM §4.3.
+ *
+ * A hairline-ruled datasheet: label in uppercase sans, value in mono. This is
+ * what makes the page read as an engineer's rather than an academic's, so it
+ * is the one place the mono face is allowed to carry real weight.
+ */
+interface Props {
+  rows: readonly { readonly label: string; readonly value: string }[];
+}
+
+const { rows } = Astro.props;
+---
+
+<dl class="spec">
+  {rows.map((row) => (
+    <div class="spec-row">
+      <dt>{row.label}</dt>
+      <dd>{row.value}</dd>
+    </div>
+  ))}
+</dl>
+
+<style>
+  .spec {
+    margin: 0;
+  }
+
+  /* Mobile: stacked label over value. Explicitly NOT a squeezed two-column
+     grid — at 320px a label column steals the width the values need and the
+     stack strings start scrolling sideways. */
+  .spec-row {
+    padding-block: var(--sp-3);
+  }
+
+  .spec-row + .spec-row {
+    border-top: var(--rule) solid var(--line);
+  }
+
+  dt {
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-label);
+    line-height: var(--lh-ui);
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: var(--sp-1) 0 0;
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    letter-spacing: var(--tracking-mono);
+    line-height: var(--lh-ui);
+
+    /* The values are long dot-separated stack strings. They must wrap inside
+       the column — MOBILE_SPEC §3 allows a wide element to scroll only inside
+       its own container, and a spec sheet is not that element. `anywhere`
+       rather than `break-word` so a single long token cannot push the row
+       wider than the viewport at 320px. */
+    overflow-wrap: anywhere;
+  }
+
+  /* Desktop: two columns, labels right-aligned against the hairline that runs
+     down the gutter between them. */
+  @media (min-width: 48rem) {
+    .spec-row {
+      display: grid;
+      grid-template-columns: 7rem minmax(0, 1fr);
+      column-gap: var(--sp-5);
+      align-items: baseline;
+    }
+
+    dt {
+      text-align: right;
+    }
+
+    dd {
+      margin-top: 0;
+      border-left: var(--rule) solid var(--line);
+      padding-left: var(--sp-5);
+    }
+
+    /* The rule between the columns is continuous, so the row separators stop
+       short of it rather than crossing it. */
+    .spec-row + .spec-row {
+      border-top: 0;
+    }
+
+    .spec-row + .spec-row dd {
+      border-top: var(--rule) solid var(--line);
+      padding-top: var(--sp-3);
+    }
+
+    .spec-row + .spec-row dt {
+      padding-top: var(--sp-3);
+    }
+
+    .spec-row {
+      padding-block: 0;
+      padding-top: var(--sp-3);
+    }
+  }
+</style>
