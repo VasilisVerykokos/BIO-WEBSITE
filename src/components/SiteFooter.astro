@@ -1,5 +1,5 @@
 ---
-import { navItems, profileLinks, site } from '../lib/site';
+import { navItems, site } from '../lib/site';
 
 /**
  * The year is resolved at build time, not in the browser. A static site has no
@@ -28,15 +28,11 @@ const year = new Date().getFullYear();
       </ul>
     </nav>
 
-    <ul class="footer-links" role="list">
-      {profileLinks.map((link) => (
-        <li>
-          <a href={link.href} aria-label={link.label} class="wrap-anywhere">
-            {link.text}
-          </a>
-        </li>
-      ))}
-    </ul>
+    {/* The four profile links used to be repeated here. They now sit in the
+        Contact section immediately above, and printing the same email, the
+        same two profiles and the same CV path twice within one screen is
+        exactly the kind of thing the anti-sloppiness checklist is about. The
+        footer keeps navigation and provenance; Contact owns the addresses. */}
 
     <p class="footer-meta">
       <span>© {year}</span>
@@ -76,8 +72,7 @@ const year = new Date().getFullYear();
     margin-top: var(--sp-1);
   }
 
-  .footer-nav ul,
-  .footer-links {
+  .footer-nav ul {
     display: flex;
     flex-wrap: wrap;
     gap: var(--sp-2) var(--sp-3);
@@ -85,15 +80,9 @@ const year = new Date().getFullYear();
     padding: 0;
   }
 
-  .footer-links {
-    display: grid;
-    gap: var(--sp-1);
-  }
-
   /* Every footer link is a real 44px target. The reference site fails this on
      31 of its 40 links; the whole point of the audit was to not repeat it. */
-  .footer-nav a,
-  .footer-links a {
+  .footer-nav a {
     display: inline-flex;
     align-items: center;
     min-height: var(--tap-min);
@@ -112,13 +101,6 @@ const year = new Date().getFullYear();
     text-decoration: none;
   }
 
-  .footer-links a {
-    color: var(--ink-2);
-    font-family: var(--font-mono);
-    font-size: var(--fs-mono);
-    letter-spacing: var(--tracking-mono);
-  }
-
   .footer-meta {
     display: flex;
     flex-wrap: wrap;
@@ -135,13 +117,6 @@ const year = new Date().getFullYear();
       grid-template-columns: 1fr auto;
       align-items: start;
       column-gap: var(--sp-8);
-    }
-
-    .footer-links {
-      grid-column: 2;
-      grid-row: 1 / span 2;
-      justify-items: end;
-      text-align: right;
     }
 
     .footer-meta {

@@ -1,0 +1,87 @@
+---
+import { contact } from '../lib/site';
+---
+
+<section id="contact" data-tint="paper-3" aria-labelledby="contact-heading">
+  <div class="container section-inner">
+    <p class="eyebrow">Contact</p>
+    <h2 id="contact-heading" class="section-heading">
+      Get in touch
+    </h2>
+
+    <p class="contact-line">{contact.line}</p>
+
+    {/* Plain text links. No form — see the note in site.ts. */}
+    <ul class="contact-rows" role="list">
+      {contact.rows.map((row) => (
+        <li>
+          <span class="contact-label">{row.label}</span>
+          <a href={row.href} class="contact-value">
+            {row.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .contact-line {
+    margin-top: var(--sp-5);
+    max-width: var(--measure);
+    color: var(--ink-2);
+  }
+
+  .contact-rows {
+    margin: var(--sp-5) 0 0;
+    padding: 0;
+  }
+
+  .contact-rows li + li {
+    border-top: var(--rule) solid var(--line);
+  }
+
+  .contact-label {
+    display: block;
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-label);
+    line-height: var(--lh-ui);
+    text-transform: uppercase;
+  }
+
+  /* The email is the one link on the page that has to be effortless on a
+     phone: a full-width 44px row, and `anywhere` so a long address can never
+     widen the page at 320px. */
+  .contact-value {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    letter-spacing: var(--tracking-mono);
+    overflow-wrap: anywhere;
+  }
+
+  .contact-rows li {
+    padding-block: var(--sp-2);
+  }
+
+  @media (min-width: 48rem) {
+    .contact-rows li {
+      display: grid;
+      grid-template-columns: 7rem minmax(0, 1fr);
+      column-gap: var(--sp-5);
+      align-items: baseline;
+    }
+
+    .contact-label {
+      /* Optical alignment: the label is 13px sans, the value 14px mono on a
+         44px row, so the label needs a nudge to sit on the value's baseline. */
+      padding-top: var(--sp-3);
+    }
+  }
+</style>

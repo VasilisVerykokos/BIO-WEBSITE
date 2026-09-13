@@ -60,7 +60,7 @@ of these can ship by accident.
 | B5 | `[[ N ]]` forward-only migrations | Work 02 — the hard part | 5 |
 | B5 | `[[ N ]]` tests | Work 02 — the hard part | 5 |
 | B11 | `[[ CONFIRM WHICH TO NAME PUBLICLY ]]` | Work 02 — government integrations | 5 |
-| B6 | `[[ CONFIRM: publish publicly or email-only? ]]` | Contact — phone number | 8 |
+| B6 | *(no placeholder — the number is simply omitted)* | Contact — phone number | 8 |
 
 The three Awards strings are shortened from CONTENT.md's wording, which reads as
 an instruction to you rather than as display copy — these render on the page, so
@@ -83,7 +83,7 @@ label, never a stock photo that could survive to production.
 | Portrait | grey circle, label `PLACEHOLDER — B8` | B8 |
 | Project screenshots | grey 16:10 boxes, label `PLACEHOLDER — B9` | B9 |
 | AEGIS video poster | grey box, label `PLACEHOLDER — B3` | B3 |
-| `cv.pdf` | one-page PDF reading `PLACEHOLDER — replace before launch` | — |
+| `cv.pdf` | one-page PDF reading `PLACEHOLDER — This is not the CV` at `/cv.pdf` | — |
 | OG share card | generated from real type/palette, but carries the live copy | B2, B7 |
 
 ---
@@ -93,7 +93,7 @@ label, never a stock photo that could survive to production.
 | Question | Decision | Where it is recorded |
 |---|---|---|
 | Accent colour | **Ember `#A8431C`** — confirmed 2026-09-13 | DESIGN_SYSTEM §1 |
-| Phone number on site | **PENDING (B6)** — CONTENT.md recommends email + LinkedIn only | Phase 8 |
+| Phone number on site | **Omitted** — BUILD_PLAN Phase 8 publishes it only on a yes to B6, and B6 is open. Reversible: add a row to `contact.rows`. | Phase 8 |
 | Open-source the accounting platform | **No** — handles live credentials | CONTENT.md § Work 02 |
 | Contact form | **No** — plain-text `mailto:` | CONTENT.md § Contact |
 | Dark theme | **Not in scope** — Phase 15 optional, only after everything else is green | BUILD_PLAN Phase 15.4 |

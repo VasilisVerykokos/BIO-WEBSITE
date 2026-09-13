@@ -34,32 +34,6 @@ export const navItems = [
 ] as const;
 
 /**
- * The four hero/footer actions, from CONTENT.md § Hero.
- *
- * The GitHub entry is live in the markup but must not ship while every
- * repository is private — that is blocker B1, tracked in TODO-VASILIS.md, and
- * it gates launch rather than the build.
- */
-export const profileLinks = [
-  { href: '/cv.pdf', label: 'Download CV', text: 'CV (PDF)' },
-  {
-    href: 'https://github.com/VasilisVerykokos',
-    label: 'GitHub profile',
-    text: 'github.com/VasilisVerykokos',
-  },
-  {
-    href: 'https://linkedin.com/in/vasilis-verykokos',
-    label: 'LinkedIn profile',
-    text: 'linkedin.com/in/vasilis-verykokos',
-  },
-  {
-    href: 'mailto:verykokosvasileios@gmail.com',
-    label: 'Email Vasileios Verykokos',
-    text: 'verykokosvasileios@gmail.com',
-  },
-] as const;
-
-/**
  * Hero copy, from CONTENT.md § Hero.
  *
  * `[[ AVAILABILITY DATE ]]` is blocker B7 and is left in the string on purpose.
@@ -235,3 +209,40 @@ export const education = [
   { date: null, lines: ['English — C2, Certificate of Proficiency'] },
   { date: null, lines: ['Military obligations — fulfilled'] },
 ] as const;
+
+/**
+ * Contact, from CONTENT.md § Contact.
+ *
+ * No form, by design. A plain mailto: is one tap, works offline, needs no
+ * backend, and cannot silently drop a message the way a form on a static host
+ * can.
+ *
+ * The phone number is deliberately absent. BUILD_PLAN Phase 8 says to publish
+ * it only if B6 comes back yes, and it has not. CONTENT.md's own
+ * recommendation is email and LinkedIn on the site with the number kept to the
+ * CV PDF: publishing it invites recruiter spam and cannot be undone once
+ * indexed. Nothing is rendered in its place — an omitted number is not a
+ * missing value, it is a decision that has not been taken yet, and it is
+ * tracked as B6 in TODO-VASILIS.md.
+ */
+export const contact = {
+  line: "I'm looking for a junior role in frontend, backend, or AI/ML — in Larissa, Athens, Thessaloniki, or remote. The fastest way to reach me is email.",
+  rows: [
+    {
+      label: 'Email',
+      href: 'mailto:verykokosvasileios@gmail.com',
+      text: 'verykokosvasileios@gmail.com',
+    },
+    {
+      label: 'LinkedIn',
+      href: 'https://linkedin.com/in/vasilis-verykokos',
+      text: 'linkedin.com/in/vasilis-verykokos',
+    },
+    {
+      label: 'GitHub',
+      href: 'https://github.com/VasilisVerykokos',
+      text: 'github.com/VasilisVerykokos',
+    },
+    { label: 'CV', href: '/cv.pdf', text: '/cv.pdf' },
+  ],
+} as const;

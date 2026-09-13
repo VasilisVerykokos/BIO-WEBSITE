@@ -6,24 +6,24 @@ import Work from '../components/Work.astro';
 import Skills from '../components/Skills.astro';
 import About from '../components/About.astro';
 import Education from '../components/Education.astro';
+import Contact from '../components/Contact.astro';
 
 /**
- * The page.
+ * The page. One long scroll, in the order a stranger should meet it:
  *
- * Sections land one phase at a time. What is left below are structural stubs,
- * not content — they exist so the
- * header and footer anchors resolve, so scroll-margin-top can be verified
- * against the sticky header, and so the page-height measurement has something
- * to measure. Each one is replaced by its own phase:
+ *   Hero       who, and the one result that matters
+ *   Awards     the proof, with the Shenzhen win treated as a headline
+ *   Work       three case studies - the core asset
+ *   Skills     what he works with
+ *   About      the voice
+ *   Education  the credentials
+ *   Contact    the fastest way to reach him
  *
- *   Hero      Phase 3        Skills     Phase 6
- *   Awards    Phase 4        About      Phase 7
- *   Work      Phase 5        Contact    Phase 8
- *
- * Every stub is visibly labelled. None can survive to production unnoticed,
- * and the Phase 14 build guard is a second line of defence.
+ * Every section is its own component and owns its own tint, so the order here
+ * is the only thing this file decides. The structural stubs that stood in for
+ * these through Phases 2-7 are gone; nothing placeholder-shaped remains in the
+ * page skeleton.
  */
-const stubs = [{ id: 'contact', title: 'Contact', phase: 8, tint: 'paper-3' }] as const;
 ---
 
 <BaseLayout>
@@ -33,23 +33,5 @@ const stubs = [{ id: 'contact', title: 'Contact', phase: 8, tint: 'paper-3' }] a
   <Skills />
   <About />
   <Education />
-
-  {stubs.map((stub) => (
-    <section id={stub.id} aria-labelledby={`${stub.id}-heading`} data-tint={stub.tint}>
-      <div class="container section-inner">
-        <h2 id={`${stub.id}-heading`}>{stub.title}</h2>
-        <p class="stub-note">Structural stub — built in Phase {stub.phase}.</p>
-      </div>
-    </section>
-  ))}
+  <Contact />
 </BaseLayout>
-
-<style>
-  .stub-note {
-    margin-top: var(--sp-3);
-    color: var(--muted);
-    font-family: var(--font-mono);
-    font-size: var(--fs-mono);
-    letter-spacing: var(--tracking-mono);
-  }
-</style>
