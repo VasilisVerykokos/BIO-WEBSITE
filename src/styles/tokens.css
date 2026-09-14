@@ -260,7 +260,7 @@
        drops from ~58px to 40px, which is 255px off the page at 375px. */
     --section-y: clamp(2.5rem, 1.25rem + 5vw, 7rem);
     --gutter: clamp(1.25rem, 0.75rem + 2.5vw, 2.5rem);
-    --max: 61.25rem; /* 980px container */
+    --max: 70rem; /* 1120px container, widened for desktop per Vasilis's request (was 980px) */
     --measure: 68ch; /* prose line length cap */
 
     /* Layout chrome */
