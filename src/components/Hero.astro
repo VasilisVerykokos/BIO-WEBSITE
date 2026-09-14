@@ -18,12 +18,12 @@ import portrait from '../assets/portrait-placeholder-b8.png';
         <span class="hero-family">{hero.familyName}</span>
       </h1>
 
-      <p class="hero-positioning">{hero.positioning}</p>
-
       <p class="hero-deck">
         <span class="hero-deck-lead">{hero.deck.lead}&#32;</span>
         <span>{hero.deck.body}</span>
       </p>
+
+      <p class="hero-positioning">{hero.positioning}</p>
 
       <p class="hero-status">
         {hero.status.map((part, i) => (
