@@ -42,7 +42,6 @@ export const navItems = [
  * and fails the build if any survive. Do not replace it with a guess.
  */
 export const hero = {
-  eyebrow: 'Full-stack developer — Java · Spring Boot · React',
   givenName: 'Vasileios',
   familyName: 'Verykokos',
   positioning: 'First place, Huawei ICT Competition World Final 2026 — Shenzhen.',
