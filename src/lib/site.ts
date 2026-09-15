@@ -39,10 +39,11 @@ export const navItems = [
  * `status` was three fragments joined with em-dashes: two cities plus
  * Thessaloniki, military status, and an availability date that was still an
  * open blocker (`[[ AVAILABILITY DATE ]]`). Per Vasilis: drop Thessaloniki and
- * drop availability entirely, and clean up what's left. Thessaloniki already
- * appears in Contact's own line, and the unresolved bracket read as an
- * obviously-unfinished page in a screenshot. A single string now, one
- * separator style throughout instead of interpunct-then-em-dash.
+ * drop availability entirely, and clean up what's left — the unresolved
+ * bracket read as an obviously-unfinished page in a screenshot. A single
+ * string now, one separator style throughout instead of interpunct-then-em-
+ * dash. Contact's own line named Thessaloniki too; also dropped there, so
+ * this isn't the only place he's listed as location-open.
  */
 export const hero = {
   givenName: 'Vasileios',
@@ -262,11 +263,10 @@ export const education = [
  * recommendation is email and LinkedIn on the site with the number kept to the
  * CV PDF: publishing it invites recruiter spam and cannot be undone once
  * indexed. Nothing is rendered in its place — an omitted number is not a
- * missing value, it is a decision that has not been taken yet, and it is
- * tracked as B6 in TODO-VASILIS.md.
+ * missing value, it is a decision that has not been taken yet.
  */
 export const contact = {
-  line: "I'm looking for a junior role in frontend, backend, or AI/ML — in Larissa, Athens, Thessaloniki, or remote. The fastest way to reach me is email.",
+  line: "I'm looking for a junior role in frontend, backend, or AI/ML — in Larissa, Athens, or remote. The fastest way to reach me is email.",
   rows: [
     {
       label: 'Email',
