@@ -18,13 +18,17 @@
 
    Fontsource's own cuts came to 210KB against MOBILE_SPEC §9's 120KB budget.
    Subsetting to the characters this site can render, and clamping the variable
-   weight axes to the weights the design actually uses, brings that to 119KB.
-   The script fails the build if it ever climbs back over.
+   weight axes to the weights the design actually uses, brought that under
+   120KB — the script fails the build if it ever climbs back over. There are
+   five files rather than four now: a narrowly-scoped bold JetBrains Mono was
+   added for the hero status line, the one place on the site that sets mono
+   text bold, and its unicode-range is deliberately smaller than the regular
+   weight's for exactly that reason.
 
-   One face per file now, rather than the latin / latin-ext pair Fontsource
-   ships — the subset spans both. The unicode-range on each still matters: it
-   is what makes an unsupported character fall through to the next family in
-   the stack instead of rendering as tofu.
+   One face per file (per weight) now, rather than the latin / latin-ext pair
+   Fontsource ships — the subset spans both. The unicode-range on each still
+   matters: it is what makes an unsupported character fall through to the next
+   family in the stack instead of rendering as tofu.
 
    NEWSREADER SHIPS NO GREEK. DESIGN_SYSTEM §2 asks for a Greek subset of it;
    the family does not have one. The only Greek in the content is the three
@@ -32,12 +36,16 @@
    and JetBrains Mono does have Greek.
    -------------------------------------------------------------------------- */
 
-/* Newsreader — headings and prose. Axis clamped to 300-500. */
+/* Newsreader — headings and prose. Axis clamped to 400-500: the two weights
+   actually used. Was 300-500 with 300 reserved as unused headroom; narrowed
+   to afford the bold JetBrains Mono face below — see scripts/subset-fonts.mjs.
+   Saved 12KB, far more than the axis-width-to-size relationship suggested it
+   would. */
 @font-face {
   font-family: 'Newsreader Variable';
   font-style: normal;
   font-display: swap;
-  font-weight: 300 500;
+  font-weight: 400 500;
   src: url('../assets/fonts/newsreader-normal.woff2') format('woff2-variations');
   unicode-range:
     U+0020-007E, U+00A0-00FF, U+2010-2015, U+2018-201E, U+2022, U+2026, U+2122,
@@ -68,8 +76,9 @@
 }
 
 /* JetBrains Mono — stack tags, metrics, spec-sheet values, and the Greek
-   acronyms. One weight only: see the note in scripts/subset-fonts.mjs for why
-   500 was dropped. Nothing on the page requests it, so there is no faux-bold. */
+   acronyms. Regular weight: see the note in scripts/subset-fonts.mjs for why
+   500 was dropped in Phase 12. Nothing requests 500, so there is no faux-bold
+   there. */
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
@@ -79,6 +88,19 @@
   unicode-range:
     U+0020-007E, U+00A0, U+00A9, U+00AE, U+00B7, U+00D7, U+0386-03CE, U+2010-2015,
     U+2018-201E, U+2022, U+2026, U+2122, U+2190-2193, U+2212, U+20AC;
+}
+
+/* True bold (700), for the hero status line only. Narrower unicode-range than
+   the regular weight on purpose — this face only ever renders ASCII letters
+   and a middle dot, so it does not carry the Greek, dashes, quotes, arrows or
+   currency the regular weight needs. See scripts/subset-fonts.mjs. */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('../assets/fonts/jetbrains-700.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00B7;
 }
 
 /* ----------------------------------------------------------------------------
@@ -135,8 +157,18 @@
   line-gap-override: 0%;
 }
 
+/* No font-weight descriptor here originally meant this only ever matched a
+   400 request — an @font-face with the descriptor omitted defaults to
+   'normal', not a range. Adding the bold JetBrains Mono face (see §0 above)
+   meant a 700 request fell straight through this rule to bare system fonts
+   with no metric override at all, and measured as a real 0.0157 CLS shift at
+   414px. The fix is this range, not new numbers: monospace fonts have a fixed
+   advance width per character regardless of weight, so size-adjust for bold
+   measured identical to regular — 109.13/93.47/27.49, confirmed via the same
+   canvas TextMetrics technique as the other fallback faces. */
 @font-face {
   font-family: 'JetBrains Fallback';
+  font-weight: 400 700;
   src:
     local('Consolas'), local('Menlo'), local('DejaVu Sans Mono'), local('Liberation Mono');
   size-adjust: 109.13%;
@@ -224,10 +256,13 @@
 
     /* Body text never drops below 17px. That is the audit's M5 finding. */
 
-    --fw-light: 300;
+    /* --fw-light (300) was removed along with it: the axis narrowing above
+       means the Newsreader file can no longer render that weight at all, so
+       keeping a token for it would be a token nothing can safely use. */
     --fw-regular: 400;
     --fw-medium: 500;
     --fw-semibold: 600; /* Inter labels only. Headings never reach this. */
+    --fw-bold: 700; /* JetBrains Mono only — the hero status line. Nothing else uses it. */
 
     --lh-tight: 1.12; /* hero */
     --lh-head: 1.25; /* h2, h3 */

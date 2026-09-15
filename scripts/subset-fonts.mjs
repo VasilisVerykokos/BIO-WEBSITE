@@ -62,13 +62,29 @@ const LATIN = ASCII + LATIN1 + PUNCT;
  */
 const MONO = ASCII + PUNCT + GREEK;
 
+/**
+ * The bold mono weight, added back for the hero status line only ("Larissa ·
+ * Athens · open to remote · Military obligations fulfilled") — nothing else
+ * on the site sets mono text bold. That text is ASCII letters plus a single
+ * middle dot (U+00B7) as a separator, so that is what this subsets to: ASCII
+ * for headroom against a future short bold-mono value, plus the one Latin-1
+ * character actually in use. The full PUNCT block first tried here (em-dash,
+ * curly quotes, arrows, currency) pushed the whole font budget to 119.4KB
+ * on-disk against a 120KB cap — 0.6KB of headroom, less than the ~1.4KB that
+ * HTTP headers add on top of the on-disk figure, so it would have failed the
+ * transferred-bytes budget in a real browser even though the build script's
+ * own on-disk check reported PASS.
+ */
+const MONO_BOLD = ASCII + '·';
+
 /*
- * Only one mono weight is built. DESIGN_SYSTEM §2 lists 400 and 500, but 500
- * was used by exactly one rule — the 01/02/03 project markers — and cost
- * 16.8KB, 14% of the whole font budget, for six glyphs. Those markers are
- * already set in the accent colour, which is what carries the emphasis. The
- * weight went; the marker did not. Reversible: restore the face here and set
- * .project-number back to --fw-medium.
+ * DESIGN_SYSTEM §2 lists mono at 400 and 500. Phase 12 dropped 500 because its
+ * only use — the 01/02/03 project markers — cost 16.8KB, 14% of the whole
+ * font budget, for six glyphs already carrying the accent colour as their
+ * emphasis. That reasoning does not apply to true bold (700): it exists
+ * because Vasilis asked for bold text and there was no heavier weight in the
+ * build to give him, and a synthesised faux-bold on a static mono font is
+ * exactly the kind of shortcut this build has avoided everywhere else.
  */
 
 const FACES = [
@@ -76,9 +92,13 @@ const FACES = [
     out: 'newsreader-normal.woff2',
     src: '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2',
     text: LATIN,
-    // Body 400, headings 400-500. 300 kept as headroom for a lighter display
-    // weight without another build change.
-    axes: { wght: { min: 300, max: 500 } },
+    // Body 400, headings 400-500. The axis used to reserve 300 as headroom for
+    // a lighter display weight nothing was using yet; that reserve was traded
+    // away to afford the bold JetBrains Mono face below when the real,
+    // gzipped transfer size came in at 120.2KB against the 120KB budget — see
+    // the note on MONO_BOLD. If 300 is ever wanted for real, widening this
+    // axis back out is a one-line change here.
+    axes: { wght: { min: 400, max: 500 } },
   },
   {
     out: 'newsreader-italic.woff2',
@@ -100,6 +120,11 @@ const FACES = [
     out: 'jetbrains-400.woff2',
     src: '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2',
     text: MONO,
+  },
+  {
+    out: 'jetbrains-700.woff2',
+    src: '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-normal.woff2',
+    text: MONO_BOLD,
   },
 ];
 

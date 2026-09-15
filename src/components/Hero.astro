@@ -133,6 +133,10 @@ import portrait from '../assets/portrait-placeholder-b8.png';
     color: var(--muted);
     font-family: var(--font-mono);
     font-size: var(--fs-mono);
+    /* The one bold use of mono anywhere on the site. A dedicated 700-weight
+       face is subsetted for exactly this — see tokens.css §0 — so this
+       renders as a real bold face, not a browser-synthesised faux-bold. */
+    font-weight: var(--fw-bold);
     letter-spacing: var(--tracking-mono);
     line-height: var(--lh-ui);
   }
