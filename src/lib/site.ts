@@ -94,12 +94,18 @@ export const heroActions = [
 /**
  * Awards, from CONTENT.md § Awards.
  *
- * Bracketed strings are blockers and stay visible in the source and on the
- * page so they cannot ship unnoticed — the Phase 14 guard greps dist/ for `[[`.
- * They are shortened from CONTENT.md's wording, which is written as an
- * instruction to Vasilis rather than as display copy: the full note for each
- * one lives in TODO-VASILIS.md. Nothing is invented, and each keeps its
- * blocker id so the two files stay traceable to each other.
+ * Bracketed strings are unresolved blockers and stay visible in the source
+ * and on the page so they cannot ship unnoticed — the Phase 14 guard greps
+ * dist/ for `[[`. They are shortened from CONTENT.md's wording, which is
+ * written as an instruction to Vasilis rather than as display copy. Nothing
+ * is invented, and each keeps its blocker id.
+ *
+ * B4 (the Thessaloniki International Fair date) is resolved: Vasilis
+ * confirmed September 2026 as written, not a typo. It stays fourth in this
+ * list, after two events that happened earlier in the same year — the order
+ * here is importance, not chronology, which is also why the World Final leads
+ * despite being neither the earliest nor (now) the most recent date. See
+ * `featured` below.
  *
  * `featured` marks the single strongest credential on the page. It is the only
  * place --accent-soft is used anywhere on the site.
@@ -127,7 +133,7 @@ export const awards = [
   {
     title: 'Exhibitor — Thessaloniki International Fair',
     context: 'Showcased AEGIS with the team.',
-    date: '[[ B4 — DATE UNVERIFIED ]]',
+    date: 'September 2026',
     featured: false,
   },
   {
