@@ -16,21 +16,17 @@ import portrait from '../assets/portrait-placeholder-b8.png';
         <span class="hero-family">{hero.familyName}</span>
       </h1>
 
+      {/* Quick-scan status, moved to sit right under the name rather than
+          trailing after the Huawei line. A recruiter gets location, remote
+          openness and eligibility in the first second, before the story. */}
+      <p class="hero-status">{hero.status}</p>
+
       <p class="hero-deck">
         <span class="hero-deck-lead">{hero.deck.lead}&#32;</span>
         <span>{hero.deck.body}</span>
       </p>
 
       <p class="hero-positioning">{hero.positioning}</p>
-
-      <p class="hero-status">
-        {hero.status.map((part, i) => (
-          <>
-            {i > 0 && <span class="hero-status-sep"> — </span>}
-            <span>{part}</span>
-          </>
-        ))}
-      </p>
 
       <ul class="hero-actions" role="list">
         {heroActions.map((action) => (
@@ -126,20 +122,19 @@ import portrait from '../assets/portrait-placeholder-b8.png';
     }
   }
 
-  /* Mono, --muted, and allowed to wrap to two lines at 320px. The separator is
-     a span so the line can break at the em-dash instead of mid-phrase. */
+  /* A quiet caption directly under the name — mono and --muted, the same
+     "fact" register as a date or a spec-sheet value elsewhere on the site.
+     Tight margin-top: it reads as the name's subtitle, not a new paragraph.
+     One separator style throughout now (interpunct only), so it wraps cleanly
+     at 320px without a stray em-dash starting a line. */
   .hero-status {
-    margin-top: var(--sp-4);
+    margin-top: var(--sp-2);
     max-width: var(--measure);
     color: var(--muted);
     font-family: var(--font-mono);
     font-size: var(--fs-mono);
     letter-spacing: var(--tracking-mono);
     line-height: var(--lh-ui);
-  }
-
-  .hero-status-sep {
-    white-space: nowrap;
   }
 
   /* ------------------------------------------------------------------------

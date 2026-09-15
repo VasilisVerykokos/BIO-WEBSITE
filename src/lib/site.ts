@@ -36,10 +36,13 @@ export const navItems = [
 /**
  * Hero copy, from CONTENT.md § Hero.
  *
- * `[[ AVAILABILITY DATE ]]` is blocker B7 and is left in the string on purpose.
- * CONTENT.md asks for the brackets to stay visible in the source so the value
- * cannot ship by accident, and the Phase 14 build guard greps dist/ for `[[`
- * and fails the build if any survive. Do not replace it with a guess.
+ * `status` was three fragments joined with em-dashes: two cities plus
+ * Thessaloniki, military status, and an availability date that was still an
+ * open blocker (`[[ AVAILABILITY DATE ]]`). Per Vasilis: drop Thessaloniki and
+ * drop availability entirely, and clean up what's left. Thessaloniki already
+ * appears in Contact's own line, and the unresolved bracket read as an
+ * obviously-unfinished page in a screenshot. A single string now, one
+ * separator style throughout instead of interpunct-then-em-dash.
  */
 export const hero = {
   givenName: 'Vasileios',
@@ -55,11 +58,7 @@ export const hero = {
     lead: 'Applied Informatics graduate from the University of Macedonia.',
     body: 'I build systems that model something real: wildfire spread over live terrain data, a multi-tenant accounting platform wired into Greek government APIs, and a market-signal engine that only speaks when something has actually changed.',
   },
-  status: [
-    'Larissa · Athens · Thessaloniki · open to remote',
-    'Military obligations fulfilled',
-    'Available [[ AVAILABILITY DATE ]]',
-  ],
+  status: 'Larissa · Athens · open to remote · Military obligations fulfilled',
 } as const;
 
 /**
