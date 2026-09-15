@@ -62,9 +62,18 @@ export const hero = {
 } as const;
 
 /**
- * The four hero actions. Short labels here; the footer carries the full URLs.
- * Exactly one is primary — the CV — and it is the only one that takes the
- * accent underline, which is accent role 2 of the three permitted.
+ * The three hero actions. Short labels here; Contact carries the full
+ * addresses, including the email as its actual, clickable text — see
+ * `contact` below. Exactly one is primary — the CV — and it is the only one
+ * that takes the accent underline, which is accent role 2 of the three
+ * permitted.
+ *
+ * Email used to be a fourth action here, a bare "Email" label with no address
+ * visible until tapped. Per Vasilis: he wanted his address as text, not
+ * hidden behind a vague link — but a plain non-clickable word sitting next to
+ * three real buttons would read as a broken button, and the full address is
+ * too long to sit comfortably in this short-label row. Dropped instead; the
+ * address is one scroll away in Contact, spelled out and still tappable.
  */
 export const heroActions = [
   { href: '/cv.pdf', text: 'Download CV', primary: true, label: 'Download CV as PDF' },
@@ -79,12 +88,6 @@ export const heroActions = [
     text: 'LinkedIn',
     primary: false,
     label: 'LinkedIn profile',
-  },
-  {
-    href: 'mailto:verykokosvasileios@gmail.com',
-    text: 'Email',
-    primary: false,
-    label: 'Email Vasileios Verykokos',
   },
 ] as const;
 
