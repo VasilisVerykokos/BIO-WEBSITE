@@ -1,9 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
 import ProjectEntry from './ProjectEntry.astro';
+import { otherProject } from '../lib/site';
 
-// Three case studies, not six. MOBILE_SPEC §5 — the page-length budget is the
-// reason this section is a shortlist rather than an archive.
+// Two case studies now, not three. MOBILE_SPEC §5 — the page-length budget is
+// part of why this section is a shortlist rather than an archive; the other
+// part is Vasilis's own call that the accounting platform reads better as a
+// brief personal-tool mention than a third flagship story. See otherProject
+// in site.ts for the full reasoning.
 const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order,
 );
@@ -13,13 +17,21 @@ const projects = (await getCollection('projects')).sort(
   <div class="container section-inner reveal">
     <p class="eyebrow">Selected work</p>
     <h2 id="work-heading" class="section-heading">
-      Three things I built
+      What I've built
     </h2>
 
     <div class="work-list">
       {projects.map((project) => (
         <ProjectEntry project={project.data} />
       ))}
+
+      {/* Deliberately not a ProjectEntry: no number, no "hard part", no spec
+          sheet. One quiet paragraph, so it reads as exactly what it is — a
+          personal tool, not a third case study. */}
+      <p class="other-project">
+        {otherProject.text}
+        <span class="other-project__stack">{otherProject.stack}</span>
+      </p>
     </div>
   </div>
 </section>
@@ -27,5 +39,23 @@ const projects = (await getCollection('projects')).sort(
 <style>
   .work-list {
     margin-top: var(--sp-5);
+  }
+
+  .other-project {
+    max-width: var(--measure);
+    padding-top: var(--sp-5);
+    border-top: var(--rule) solid var(--line);
+    color: var(--ink-3);
+    font-size: var(--fs-small);
+    line-height: var(--lh-ui);
+  }
+
+  .other-project__stack {
+    display: block;
+    margin-top: var(--sp-2);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    letter-spacing: var(--tracking-mono);
   }
 </style>

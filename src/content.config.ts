@@ -59,9 +59,10 @@ const projects = defineCollection({
 
     /**
      * `href` is optional on purpose. Several of these point at things that do
-     * not exist publicly yet (blockers B1, B3, B9) or deliberately never will
-     * — the accounting platform's source stays private. An entry without an
-     * href renders as plain text, never as a dead link.
+     * not exist publicly yet (blockers B1, B3, B9), or point at something
+     * that will deliberately never go public — a private repository handling
+     * live credentials, say. An entry without an href renders as plain text,
+     * never as a dead link.
      */
     links: z.array(
       z.object({

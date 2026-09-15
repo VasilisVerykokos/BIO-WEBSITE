@@ -17,12 +17,11 @@ that window — what has he actually done, can he actually build things, and how
 I reach him — and to answer them on a 320px screen with no JavaScript.
 
 The headline is first place at the **Huawei ICT Competition World Final 2026** in
-Shenzhen. Behind it sit three case studies, each written around one paragraph
-called *the hard part*: not what the project was, but the specific engineering
-problem I had to solve and how I solved it. A wildfire spread model running
-client-side in a browser. A multi-tenant platform that stores other firms' tax
-credentials. A signal engine built as a state machine so it fires on transitions
-instead of crying wolf every day.
+Shenzhen. Behind it sit two case studies, each written around one paragraph called
+*the hard part*: not what the project was, but the specific engineering problem I
+had to solve and how I solved it. A wildfire spread model running client-side in a
+browser. A signal engine built as a state machine so it fires on transitions instead
+of crying wolf every day.
 
 **The repository is part of the portfolio.** If you are evaluating me as an
 engineer, the code here is meant to be read — that is why the commit history is

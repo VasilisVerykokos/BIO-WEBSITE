@@ -50,13 +50,20 @@ export const hero = {
   positioning: 'First place, Huawei ICT Competition World Final 2026 — Shenzhen.',
   /**
    * Split at the sentence boundary so phones can show the second sentence
-   * alone. Not a rewrite — both halves are CONTENT.md's words, unedited. The
-   * lead sentence is the one that repeats in About and Education, which is why
+   * alone. The lead sentence repeats in About and Education, which is why
    * it is the half that gives way when vertical space is short.
+   *
+   * `body` originally named three systems — this one, AEGIS, and the
+   * accounting platform — matching the three case studies Work.astro used to
+   * show. Per Vasilis, that platform is now described as a small personal
+   * tool rather than a flagship project (see `otherProject` below), so
+   * naming it here as one of two headline achievements would contradict how
+   * it reads two sections later. Rewritten to a pair rather than padded back
+   * to three with something unearned.
    */
   deck: {
     lead: 'Applied Informatics graduate from the University of Macedonia.',
-    body: 'I build systems that model something real: wildfire spread over live terrain data, a multi-tenant accounting platform wired into Greek government APIs, and a market-signal engine that only speaks when something has actually changed.',
+    body: 'I build systems that model something real: wildfire spread over live terrain data, and a market-signal engine that only speaks when something has actually changed.',
   },
   status: 'Larissa · Athens · open to remote · Military obligations fulfilled',
 } as const;
@@ -90,6 +97,32 @@ export const heroActions = [
     label: 'LinkedIn profile',
   },
 ] as const;
+
+/**
+ * The one project that doesn't get the full case-study treatment.
+ *
+ * This used to be a third numbered case study — "Accounting practice
+ * platform," rewritten from the CV's own modest framing into a multi-tenant
+ * SaaS narrative with tenant isolation, encrypted credentials, an audit
+ * trail. Per Vasilis: drop that framing. It's a personal tool, not a flagship
+ * project, and he wants it described as exactly that — brief, the way the CV
+ * itself originally put it, not run through the "hard part" / spec-sheet
+ * treatment Work.astro gives AEGIS and Signal.
+ *
+ * Rendered as a single quiet paragraph below the two real case studies, not
+ * through the typed `projects` collection — that schema requires a 200+
+ * character `hardPart`, which exists specifically to stop a case study being
+ * quietly under-written. Padding this out to clear that floor just to reuse
+ * the same component would be exactly the kind of padding that rule is for.
+ *
+ * The hero's deck paragraph used to name this project too, alongside AEGIS
+ * and Signal, as one of three flagship systems. That line is rewritten to
+ * match — see `hero.deck.body` above.
+ */
+export const otherProject = {
+  text: 'I also built a small CRM for my own use — client records, documents, and reminders for recurring tasks, running locally.',
+  stack: 'Java · Spring Boot · React · PostgreSQL · Docker Compose',
+} as const;
 
 /**
  * Awards, from CONTENT.md § Awards.
