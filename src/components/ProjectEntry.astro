@@ -95,13 +95,17 @@ const headingId = `project-${slug}`;
     </div>
   </details>
 
-  <ul class="project-links" role="list">
-    {project.links.map((link) => (
-      <li>
-        {link.href ? <a href={link.href}>{link.text}</a> : <span>{link.text}</span>}
-      </li>
-    ))}
-  </ul>
+  {/* Conditional so an empty links array — a project with nothing to point at
+      yet — leaves no dangling empty list carrying its own top margin. */}
+  {project.links.length > 0 && (
+    <ul class="project-links" role="list">
+      {project.links.map((link) => (
+        <li>
+          {link.href ? <a href={link.href}>{link.text}</a> : <span>{link.text}</span>}
+        </li>
+      ))}
+    </ul>
+  )}
 </article>
 
 <style>

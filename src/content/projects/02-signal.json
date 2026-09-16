@@ -21,10 +21,7 @@
       "value": "Transition-triggered signal engine — no repeat alerts"
     }
   ],
-  "links": [
-    { "text": "Live demo — [[ B1 — NOT YET DEPLOYED ]]" },
-    { "text": "Public repo — [[ B1 — MAKE THIS ONE PUBLIC FIRST ]]" }
-  ],
-  "screenshotCount": 2,
+  "links": [],
+  "screenshotCount": 0,
   "hasVideo": false
 }
