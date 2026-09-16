@@ -58,7 +58,6 @@ import portrait from '../assets/portrait-placeholder-b8.png';
         decoding="async"
         fetchpriority="high"
       />
-      <figcaption>PLACEHOLDER — B8</figcaption>
     </figure>
   </div>
 </section>
@@ -211,17 +210,6 @@ import portrait from '../assets/portrait-placeholder-b8.png';
     object-fit: cover;
   }
 
-  /* Deleted along with the placeholder when B8 lands. */
-  .hero-portrait figcaption {
-    margin-top: var(--sp-2);
-    width: 8.75rem;
-    color: var(--accent);
-    font-family: var(--font-mono);
-    font-size: var(--fs-label);
-    letter-spacing: var(--tracking-mono);
-    text-align: center;
-  }
-
   /* ------------------------------------------------------------------------
      Desktop — two columns, copy left, portrait right.
      ---------------------------------------------------------------------- */
@@ -240,8 +228,7 @@ import portrait from '../assets/portrait-placeholder-b8.png';
       margin-top: var(--sp-2);
     }
 
-    .hero-portrait :global(img),
-    .hero-portrait figcaption {
+    .hero-portrait :global(img) {
       width: 16.25rem; /* 260px */
     }
   }
