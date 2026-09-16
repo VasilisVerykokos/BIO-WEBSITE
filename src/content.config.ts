@@ -71,11 +71,49 @@ const projects = defineCollection({
       }),
     ),
 
-    /** Screenshots are capped at two on mobile by MOBILE_SPEC §8. */
+    /**
+     * Real screenshots, once they exist. Paths are relative to
+     * src/assets/projects/ — e.g. "aegis/map-view.jpg" resolves to
+     * src/assets/projects/aegis/map-view.jpg. MediaStrip.astro resolves them
+     * through import.meta.glob against every image under that folder, so
+     * adding one is: drop the file there, add its path here. No component
+     * touched, no import statement written by hand.
+     *
+     * Empty (the default) is not "no screenshots" — every current project
+     * still wants two — it means the real files don't exist yet, so the strip
+     * falls back to `screenshotCount` grey B9 placeholders instead. The two
+     * fields are mutually exclusive in practice: once `screenshots` has
+     * entries, they render instead of placeholders and `screenshotCount` is
+     * ignored. Capped at two on mobile by MOBILE_SPEC §8, same as the count.
+     */
+    screenshots: z.array(z.string().min(1)).max(2).default([]),
+
+    /** Only consulted when `screenshots` is empty — see above. */
     screenshotCount: z.number().int().min(0).max(2).default(2),
 
-    /** Only AEGIS has a demo video. */
-    hasVideo: z.boolean().default(false),
+    /**
+     * Whether this project gets a video block at all — real or placeholder.
+     * Only AEGIS does. This used to be called `hasVideo`; renamed because it
+     * no longer means "there is a video," it means "there will be one."
+     */
+    expectsVideo: z.boolean().default(false),
+
+    /**
+     * A YouTube video ID — the part after `v=` in a youtube.com/watch URL, or
+     * after youtu.be/. Optional even when `expectsVideo` is true: until this
+     * and `videoPoster` are both set, the block shows today's placeholder
+     * poster with a disabled button, same as now. Once both are set, MediaStrip
+     * swaps in the real poster and a working click-to-load embed — the
+     * iframe is never shipped on first load, only after a tap, so the ~1MB a
+     * YouTube embed costs is never paid unless someone actually asks for it.
+     */
+    videoId: z.string().min(1).optional(),
+
+    /**
+     * The real poster frame for the video, once there is one. Same path
+     * convention and resolution mechanism as `screenshots`.
+     */
+    videoPoster: z.string().min(1).optional(),
   }),
 });
 

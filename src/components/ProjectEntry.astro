@@ -52,7 +52,12 @@ const headingId = `project-${slug}`;
   {/* The demo video stays outside the expander. It is the single
       highest-impact artifact on the page and hiding it behind a tap on the one
       project that has one would be the wrong trade. */}
-  <MediaStrip count={0} hasVideo={project.hasVideo} projectTitle={project.title} />
+  <MediaStrip
+    projectTitle={project.title}
+    expectsVideo={project.expectsVideo}
+    videoId={project.videoId}
+    videoPoster={project.videoPoster}
+  />
 
   {/*
     Length control, MOBILE_SPEC §5. A real <details>, not a scripted accordion:
@@ -88,9 +93,9 @@ const headingId = `project-${slug}`;
           of a 7000px page budget — more than the entire Skills section. On
           desktop the expander is forced open, so nothing is hidden there. */}
       <MediaStrip
-        count={project.screenshotCount}
-        hasVideo={false}
         projectTitle={project.title}
+        screenshots={project.screenshots}
+        screenshotCount={project.screenshotCount}
       />
     </div>
   </details>

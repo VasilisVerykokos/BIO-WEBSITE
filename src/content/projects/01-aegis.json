@@ -30,5 +30,5 @@
     { "text": "[[ B1 — REPO, OR \"private, available on request\" ]]" }
   ],
   "screenshotCount": 2,
-  "hasVideo": true
+  "expectsVideo": true
 }

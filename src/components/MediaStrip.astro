@@ -1,37 +1,88 @@
 ---
 import { Picture } from 'astro:assets';
-import shot from '../assets/screenshot-placeholder-b9.png';
-import poster from '../assets/video-poster-placeholder-b3.png';
+import type { ImageMetadata } from 'astro';
+import placeholderShot from '../assets/screenshot-placeholder-b9.png';
+import placeholderPoster from '../assets/video-poster-placeholder-b3.png';
 
 /**
- * Screenshots, and for AEGIS the demo-video facade.
+ * Screenshots, and for AEGIS the demo-video facade — real assets when a
+ * project supplies them, labelled placeholders when it doesn't.
  *
- * Every image here is a labelled placeholder. B9 (real screenshots) and B3
- * (the demo video) are unresolved, and Phase 0.4 is explicit that a
- * placeholder must be obviously a placeholder rather than a stock image that
- * could survive to production.
+ * Every real image lands under src/assets/projects/<anything>/ and is
+ * resolved here through import.meta.glob rather than a hand-written import —
+ * so adding one is "drop the file, list its path in the project's JSON," not
+ * a code change. A path listed in the JSON that doesn't resolve to a real
+ * file throws at build time with the exact path it looked for, rather than
+ * silently rendering a broken image.
  *
- * The video is a facade, not an embed: a poster and a real button. MOBILE_SPEC
- * §8 forbids shipping the player on first load — a YouTube iframe is roughly a
- * megabyte, which is twice this site's entire page budget. Nothing is wired to
- * the button until B3 supplies something to play, so it is rendered disabled
- * rather than as a control that lies about what it does.
+ * The video stays a facade even once it's real: a poster and a button, never
+ * an iframe on first load. MOBILE_SPEC §8 forbids that — a YouTube embed is
+ * roughly a megabyte, twice this site's entire page budget — so the iframe
+ * is only ever created after a tap, by the script at the bottom of this file.
  */
 interface Props {
-  count: number;
-  hasVideo: boolean;
   projectTitle: string;
+
+  /** Real screenshot paths, relative to src/assets/projects/. */
+  screenshots?: string[];
+  /** Placeholder box count, used only when `screenshots` is empty. */
+  screenshotCount?: number;
+
+  /** Whether this project gets a video block at all, real or placeholder. */
+  expectsVideo?: boolean;
+  /** A YouTube video ID. Needs `videoPoster` too before the block goes real. */
+  videoId?: string;
+  /** The real poster frame, relative to src/assets/projects/. */
+  videoPoster?: string;
 }
 
-const { count, hasVideo, projectTitle } = Astro.props;
-const shots = Array.from({ length: count }, (_, i) => i + 1);
+const {
+  projectTitle,
+  screenshots = [],
+  screenshotCount = 0,
+  expectsVideo = false,
+  videoId,
+  videoPoster,
+} = Astro.props;
+
+const projectAssets = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/projects/**/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true },
+);
+
+function resolveAsset(relativePath: string): ImageMetadata {
+  const key = `/src/assets/projects/${relativePath}`;
+  const mod = projectAssets[key];
+  if (!mod) {
+    const available = Object.keys(projectAssets).join(', ') || '(none found)';
+    throw new Error(
+      `MediaStrip: "${relativePath}" is listed for ${projectTitle} but no file exists at ` +
+        `src/assets/projects/${relativePath}. Available under src/assets/projects/: ${available}`,
+    );
+  }
+  return mod.default;
+}
+
+const hasRealVideo = expectsVideo && Boolean(videoId) && Boolean(videoPoster);
+const shots =
+  screenshots.length > 0
+    ? screenshots.map((path, i) => ({ n: i + 1, src: resolveAsset(path), real: true }))
+    : Array.from({ length: screenshotCount }, (_, i) => ({
+        n: i + 1,
+        src: placeholderShot,
+        real: false,
+      }));
 ---
 
-{hasVideo && (
+{expectsVideo && (
   <figure class="video-facade">
     <Picture
-      src={poster}
-      alt={`Placeholder graphic standing in for the ${projectTitle} demo video poster — blocker B3.`}
+      src={hasRealVideo ? resolveAsset(videoPoster!) : placeholderPoster}
+      alt={
+        hasRealVideo
+          ? `${projectTitle} demo video`
+          : `Placeholder graphic standing in for the ${projectTitle} demo video poster — blocker B3.`
+      }
       formats={['avif', 'webp']}
       fallbackFormat="jpeg"
       widths={[320, 480, 640, 960]}
@@ -39,17 +90,25 @@ const shots = Array.from({ length: count }, (_, i) => i + 1);
       loading="lazy"
       decoding="async"
     />
-    <button type="button" class="video-play" disabled aria-describedby="video-blocked">
+    <button
+      type="button"
+      class="video-play"
+      disabled={!hasRealVideo}
+      data-video-id={hasRealVideo ? videoId : undefined}
+      aria-describedby={hasRealVideo ? undefined : 'video-blocked'}
+    >
       <span class="video-play__triangle" aria-hidden="true" />
       <span class="visually-hidden">Play the {projectTitle} demo video</span>
     </button>
-    <figcaption id="video-blocked">
-      PLACEHOLDER — B3 · demo video not yet hosted
-    </figcaption>
+    {!hasRealVideo && (
+      <figcaption id="video-blocked">
+        PLACEHOLDER — B3 · demo video not yet hosted
+      </figcaption>
+    )}
   </figure>
 )}
 
-{count > 0 && (
+{shots.length > 0 && (
   <div
     class="strip-wrap"
     role="region"
@@ -57,12 +116,16 @@ const shots = Array.from({ length: count }, (_, i) => i + 1);
     aria-label={`${projectTitle} screenshots, scrollable`}
   >
     <ul class="strip" role="list">
-      {shots.map((n) => (
+      {shots.map((shot) => (
         <li>
           <figure>
             <Picture
-              src={shot}
-              alt={`Placeholder graphic standing in for ${projectTitle} screenshot ${n} — blocker B9.`}
+              src={shot.src}
+              alt={
+                shot.real
+                  ? `${projectTitle} screenshot ${shot.n}`
+                  : `Placeholder graphic standing in for ${projectTitle} screenshot ${shot.n} — blocker B9.`
+              }
               formats={['avif', 'webp']}
               fallbackFormat="jpeg"
               widths={[320, 480, 640]}
@@ -70,7 +133,9 @@ const shots = Array.from({ length: count }, (_, i) => i + 1);
               loading="lazy"
               decoding="async"
             />
-            <figcaption>PLACEHOLDER — B9 · screenshot {n}</figcaption>
+            {!shot.real && (
+              <figcaption>PLACEHOLDER — B9 · screenshot {shot.n}</figcaption>
+            )}
           </figure>
         </li>
       ))}
@@ -88,11 +153,13 @@ const shots = Array.from({ length: count }, (_, i) => i + 1);
     margin: var(--sp-5) 0 0;
   }
 
-  .video-facade :global(img) {
+  .video-facade :global(img),
+  .video-facade :global(.video-embed) {
     width: 100%;
     aspect-ratio: 16 / 9;
     border-radius: var(--radius-lg);
     object-fit: cover;
+    border: 0;
   }
 
   /* >= 56px, per MOBILE_SPEC §8. Centred over the poster. */
@@ -113,6 +180,16 @@ const shots = Array.from({ length: count }, (_, i) => i + 1);
   .video-play[disabled] {
     cursor: not-allowed;
     opacity: 0.65;
+  }
+
+  .video-play:not([disabled]) {
+    cursor: pointer;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .video-play:not([disabled]):hover {
+      border-color: var(--accent);
+    }
   }
 
   .video-play__triangle {
@@ -184,8 +261,43 @@ const shots = Array.from({ length: count }, (_, i) => i + 1);
   }
 
   @media (min-width: 64rem) {
-    .video-facade :global(img) {
+    .video-facade :global(img),
+    .video-facade :global(.video-embed) {
       max-width: 40rem;
     }
   }
 </style>
+
+<script>
+  /**
+   * Click-to-load, for real videos only. A disabled button (the placeholder
+   * case) has no data-video-id and this never touches it.
+   *
+   * youtube-nocookie.com rather than youtube.com: no tracking cookie is set
+   * until playback actually starts, which is the point of the domain
+   * existing. vercel.json's CSP allows exactly this one frame-src origin —
+   * see the comment there for why nothing else is allowed.
+   */
+  const buttons = document.querySelectorAll<HTMLButtonElement>(
+    '.video-play[data-video-id]',
+  );
+
+  for (const button of buttons) {
+    button.addEventListener('click', () => {
+      const id = button.dataset.videoId;
+      const facade = button.closest('.video-facade');
+      if (!id || !facade) return;
+
+      const iframe = document.createElement('iframe');
+      iframe.className = 'video-embed';
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
+      iframe.title = 'Demo video player';
+      iframe.loading = 'lazy';
+      iframe.allow =
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+
+      facade.replaceChildren(iframe);
+    });
+  }
+</script>
