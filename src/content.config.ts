@@ -59,10 +59,10 @@ const projects = defineCollection({
 
     /**
      * `href` is optional on purpose. Several of these point at things that do
-     * not exist publicly yet (blockers B1, B3, B9), or point at something
-     * that will deliberately never go public — a private repository handling
-     * live credentials, say. An entry without an href renders as plain text,
-     * never as a dead link.
+     * not exist publicly yet (blockers B1, B9), or point at something that
+     * will deliberately never go public — a private repository handling live
+     * credentials, say. An entry without an href renders as plain text, never
+     * as a dead link.
      */
     links: z.array(
       z.object({
@@ -90,30 +90,6 @@ const projects = defineCollection({
 
     /** Only consulted when `screenshots` is empty — see above. */
     screenshotCount: z.number().int().min(0).max(2).default(2),
-
-    /**
-     * Whether this project gets a video block at all — real or placeholder.
-     * Only AEGIS does. This used to be called `hasVideo`; renamed because it
-     * no longer means "there is a video," it means "there will be one."
-     */
-    expectsVideo: z.boolean().default(false),
-
-    /**
-     * A YouTube video ID — the part after `v=` in a youtube.com/watch URL, or
-     * after youtu.be/. Optional even when `expectsVideo` is true: until this
-     * and `videoPoster` are both set, the block shows today's placeholder
-     * poster with a disabled button, same as now. Once both are set, MediaStrip
-     * swaps in the real poster and a working click-to-load embed — the
-     * iframe is never shipped on first load, only after a tap, so the ~1MB a
-     * YouTube embed costs is never paid unless someone actually asks for it.
-     */
-    videoId: z.string().min(1).optional(),
-
-    /**
-     * The real poster frame for the video, once there is one. Same path
-     * convention and resolution mechanism as `screenshots`.
-     */
-    videoPoster: z.string().min(1).optional(),
   }),
 });
 

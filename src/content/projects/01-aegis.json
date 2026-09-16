@@ -25,10 +25,6 @@
     },
     { "label": "Result", "value": "1st place — Huawei ICT World Final, Shenzhen" }
   ],
-  "links": [
-    { "text": "Demo video — [[ B3 — NOT YET HOSTED ]]" },
-    { "text": "[[ B1 — REPO, OR \"private, available on request\" ]]" }
-  ],
-  "screenshotCount": 2,
-  "expectsVideo": true
+  "links": [{ "text": "[[ B1 — REPO, OR \"private, available on request\" ]]" }],
+  "screenshotCount": 2
 }

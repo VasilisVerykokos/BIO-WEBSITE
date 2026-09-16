@@ -49,16 +49,6 @@ const headingId = `project-${slug}`;
     <p class="hard-part__text">{project.hardPart}</p>
   </div>
 
-  {/* The demo video stays outside the expander. It is the single
-      highest-impact artifact on the page and hiding it behind a tap on the one
-      project that has one would be the wrong trade. */}
-  <MediaStrip
-    projectTitle={project.title}
-    expectsVideo={project.expectsVideo}
-    videoId={project.videoId}
-    videoPoster={project.videoPoster}
-  />
-
   {/*
     Length control, MOBILE_SPEC §5. A real <details>, not a scripted accordion:
     it opens with zero JavaScript, it is keyboard-operable for free, and screen

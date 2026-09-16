@@ -2,11 +2,10 @@
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import placeholderShot from '../assets/screenshot-placeholder-b9.png';
-import placeholderPoster from '../assets/video-poster-placeholder-b3.png';
 
 /**
- * Screenshots, and for AEGIS the demo-video facade — real assets when a
- * project supplies them, labelled placeholders when it doesn't.
+ * Project screenshots — real images when a project supplies them, labelled
+ * placeholders when it doesn't.
  *
  * Every real image lands under src/assets/projects/<anything>/ and is
  * resolved here through import.meta.glob rather than a hand-written import —
@@ -15,35 +14,20 @@ import placeholderPoster from '../assets/video-poster-placeholder-b3.png';
  * file throws at build time with the exact path it looked for, rather than
  * silently rendering a broken image.
  *
- * The video stays a facade even once it's real: a poster and a button, never
- * an iframe on first load. MOBILE_SPEC §8 forbids that — a YouTube embed is
- * roughly a megabyte, twice this site's entire page budget — so the iframe
- * is only ever created after a tap, by the script at the bottom of this file.
+ * This component used to also render a demo-video facade. Per Vasilis: pics
+ * only, no video anywhere on the site. Removed rather than left dormant —
+ * see the Phase 14-era commit for the full video system if it's ever wanted
+ * back; nothing here references it any more.
  */
 interface Props {
   projectTitle: string;
-
   /** Real screenshot paths, relative to src/assets/projects/. */
   screenshots?: string[];
   /** Placeholder box count, used only when `screenshots` is empty. */
   screenshotCount?: number;
-
-  /** Whether this project gets a video block at all, real or placeholder. */
-  expectsVideo?: boolean;
-  /** A YouTube video ID. Needs `videoPoster` too before the block goes real. */
-  videoId?: string;
-  /** The real poster frame, relative to src/assets/projects/. */
-  videoPoster?: string;
 }
 
-const {
-  projectTitle,
-  screenshots = [],
-  screenshotCount = 0,
-  expectsVideo = false,
-  videoId,
-  videoPoster,
-} = Astro.props;
+const { projectTitle, screenshots = [], screenshotCount = 0 } = Astro.props;
 
 const projectAssets = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/projects/**/*.{jpg,jpeg,png,webp,avif}',
@@ -63,7 +47,6 @@ function resolveAsset(relativePath: string): ImageMetadata {
   return mod.default;
 }
 
-const hasRealVideo = expectsVideo && Boolean(videoId) && Boolean(videoPoster);
 const shots =
   screenshots.length > 0
     ? screenshots.map((path, i) => ({ n: i + 1, src: resolveAsset(path), real: true }))
@@ -73,40 +56,6 @@ const shots =
         real: false,
       }));
 ---
-
-{expectsVideo && (
-  <figure class="video-facade">
-    <Picture
-      src={hasRealVideo ? resolveAsset(videoPoster!) : placeholderPoster}
-      alt={
-        hasRealVideo
-          ? `${projectTitle} demo video`
-          : `Placeholder graphic standing in for the ${projectTitle} demo video poster — blocker B3.`
-      }
-      formats={['avif', 'webp']}
-      fallbackFormat="jpeg"
-      widths={[320, 480, 640, 960]}
-      sizes="(min-width: 64rem) 640px, 100vw"
-      loading="lazy"
-      decoding="async"
-    />
-    <button
-      type="button"
-      class="video-play"
-      disabled={!hasRealVideo}
-      data-video-id={hasRealVideo ? videoId : undefined}
-      aria-describedby={hasRealVideo ? undefined : 'video-blocked'}
-    >
-      <span class="video-play__triangle" aria-hidden="true" />
-      <span class="visually-hidden">Play the {projectTitle} demo video</span>
-    </button>
-    {!hasRealVideo && (
-      <figcaption id="video-blocked">
-        PLACEHOLDER — B3 · demo video not yet hosted
-      </figcaption>
-    )}
-  </figure>
-)}
 
 {shots.length > 0 && (
   <div
@@ -144,78 +93,9 @@ const shots =
 )}
 
 <style>
-  /* --------------------------------------------------------------------------
-     Video facade
-     ------------------------------------------------------------------------ */
-
-  .video-facade {
-    position: relative;
-    margin: var(--sp-5) 0 0;
-  }
-
-  .video-facade :global(img),
-  .video-facade :global(.video-embed) {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border-radius: var(--radius-lg);
-    object-fit: cover;
-    border: 0;
-  }
-
-  /* >= 56px, per MOBILE_SPEC §8. Centred over the poster. */
-  .video-play {
-    position: absolute;
-    top: calc(50% - var(--sp-7));
-    left: 50%;
-    translate: -50% -50%;
-    display: grid;
-    place-items: center;
-    width: var(--sp-8);
-    height: var(--sp-8);
-    border-radius: var(--radius-round);
-    background-color: var(--paper);
-    border: var(--rule) solid var(--line-strong);
-  }
-
-  .video-play[disabled] {
-    cursor: not-allowed;
-    opacity: 0.65;
-  }
-
-  .video-play:not([disabled]) {
-    cursor: pointer;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .video-play:not([disabled]):hover {
-      border-color: var(--accent);
-    }
-  }
-
-  .video-play__triangle {
-    width: 0;
-    height: 0;
-    margin-left: var(--sp-1);
-    border-top: var(--sp-3) solid transparent;
-    border-bottom: var(--sp-3) solid transparent;
-    border-left: var(--sp-4) solid var(--ink);
-  }
-
-  .video-facade figcaption,
-  .strip figcaption {
-    margin-top: var(--sp-2);
-    color: var(--accent);
-    font-family: var(--font-mono);
-    font-size: var(--fs-label);
-    letter-spacing: var(--tracking-mono);
-  }
-
-  /* --------------------------------------------------------------------------
-     Screenshot strip — scroll-snap, never an auto-advancing carousel.
-     ------------------------------------------------------------------------ */
-
-  /* The scroll container is the wrapper, not the list, so that the thing
-     taking keyboard focus is a labelled region rather than a bare <ul>. */
+  /* Scroll-snap strip, never an auto-advancing carousel. The scroll
+     container is the wrapper, not the list, so that the thing taking
+     keyboard focus is a labelled region rather than a bare <ul>. */
   .strip-wrap {
     margin-top: var(--sp-5);
     overflow-x: auto;
@@ -254,50 +134,17 @@ const shots =
     margin: 0;
   }
 
+  .strip figcaption {
+    margin-top: var(--sp-2);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-mono);
+  }
+
   @media (min-width: 48rem) {
     .strip > li {
       flex-basis: 26.25rem; /* 420px */
     }
   }
-
-  @media (min-width: 64rem) {
-    .video-facade :global(img),
-    .video-facade :global(.video-embed) {
-      max-width: 40rem;
-    }
-  }
 </style>
-
-<script>
-  /**
-   * Click-to-load, for real videos only. A disabled button (the placeholder
-   * case) has no data-video-id and this never touches it.
-   *
-   * youtube-nocookie.com rather than youtube.com: no tracking cookie is set
-   * until playback actually starts, which is the point of the domain
-   * existing. vercel.json's CSP allows exactly this one frame-src origin —
-   * see the comment there for why nothing else is allowed.
-   */
-  const buttons = document.querySelectorAll<HTMLButtonElement>(
-    '.video-play[data-video-id]',
-  );
-
-  for (const button of buttons) {
-    button.addEventListener('click', () => {
-      const id = button.dataset.videoId;
-      const facade = button.closest('.video-facade');
-      if (!id || !facade) return;
-
-      const iframe = document.createElement('iframe');
-      iframe.className = 'video-embed';
-      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
-      iframe.title = 'Demo video player';
-      iframe.loading = 'lazy';
-      iframe.allow =
-        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      iframe.allowFullscreen = true;
-
-      facade.replaceChildren(iframe);
-    });
-  }
-</script>
