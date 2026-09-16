@@ -1,7 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import { hero, heroActions } from '../lib/site';
-import portrait from '../assets/portrait-placeholder-b8.png';
+import portrait from '../assets/portrait.jpg';
 ---
 
 <section id="hero" class="hero" aria-labelledby="hero-name">
@@ -49,7 +49,7 @@ import portrait from '../assets/portrait-placeholder-b8.png';
     <figure class="hero-portrait">
       <Picture
         src={portrait}
-        alt="Placeholder graphic. The portrait photograph has not been supplied yet — blocker B8."
+        alt={hero.givenName + ' ' + hero.familyName}
         formats={['avif', 'webp']}
         fallbackFormat="jpeg"
         widths={[180, 240, 360, 480, 600]}

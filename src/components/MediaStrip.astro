@@ -19,10 +19,14 @@ import placeholderShot from '../assets/screenshot-placeholder-b9.png';
  * see the Phase 14-era commit for the full video system if it's ever wanted
  * back; nothing here references it any more.
  */
+type ScreenshotEntry = string | { path: string; alt: string };
+
 interface Props {
   projectTitle: string;
-  /** Real screenshot paths, relative to src/assets/projects/. */
-  screenshots?: string[];
+  /** Real image entries, relative to src/assets/projects/. A bare string
+   * gets a generic "<title> screenshot N" alt text; the object form's `alt`
+   * overrides that for an image that isn't literally a UI screenshot. */
+  screenshots?: ScreenshotEntry[];
   /** Placeholder box count, used only when `screenshots` is empty. */
   screenshotCount?: number;
 }
@@ -49,10 +53,16 @@ function resolveAsset(relativePath: string): ImageMetadata {
 
 const shots =
   screenshots.length > 0
-    ? screenshots.map((path, i) => ({ n: i + 1, src: resolveAsset(path), real: true }))
+    ? screenshots.map((entry, i) => {
+        const path = typeof entry === 'string' ? entry : entry.path;
+        const alt =
+          typeof entry === 'string' ? `${projectTitle} screenshot ${i + 1}` : entry.alt;
+        return { n: i + 1, src: resolveAsset(path), alt, real: true };
+      })
     : Array.from({ length: screenshotCount }, (_, i) => ({
         n: i + 1,
         src: placeholderShot,
+        alt: `Placeholder graphic standing in for ${projectTitle} screenshot ${i + 1} — blocker B9.`,
         real: false,
       }));
 ---
@@ -70,11 +80,7 @@ const shots =
           <figure>
             <Picture
               src={shot.src}
-              alt={
-                shot.real
-                  ? `${projectTitle} screenshot ${shot.n}`
-                  : `Placeholder graphic standing in for ${projectTitle} screenshot ${shot.n} — blocker B9.`
-              }
+              alt={shot.alt}
               formats={['avif', 'webp']}
               fallbackFormat="jpeg"
               widths={[320, 480, 640]}

@@ -72,21 +72,35 @@ const projects = defineCollection({
     ),
 
     /**
-     * Real screenshots, once they exist. Paths are relative to
+     * Real images, once they exist. Paths are relative to
      * src/assets/projects/ — e.g. "aegis/map-view.jpg" resolves to
      * src/assets/projects/aegis/map-view.jpg. MediaStrip.astro resolves them
      * through import.meta.glob against every image under that folder, so
      * adding one is: drop the file there, add its path here. No component
      * touched, no import statement written by hand.
      *
-     * Empty (the default) is not "no screenshots" — every current project
-     * still wants two — it means the real files don't exist yet, so the strip
-     * falls back to `screenshotCount` grey B9 placeholders instead. The two
-     * fields are mutually exclusive in practice: once `screenshots` has
-     * entries, they render instead of placeholders and `screenshotCount` is
-     * ignored. Capped at two on mobile by MOBILE_SPEC §8, same as the count.
+     * A bare string gets a generic alt text ("<title> screenshot N") — fine
+     * for an actual UI capture. Not every entry here is one: AEGIS's two are
+     * event photos, and "AEGIS screenshot 1" would be a wrong description of
+     * a photo of the team holding a medal. The object form's `alt` overrides
+     * the generic text for exactly that case.
+     *
+     * Empty (the default) is not "no images" — it means the real files don't
+     * exist yet, so the strip falls back to `screenshotCount` grey B9
+     * placeholders instead. The two fields are mutually exclusive in
+     * practice: once `screenshots` has entries, they render instead of
+     * placeholders and `screenshotCount` is ignored. Capped at two on mobile
+     * by MOBILE_SPEC §8, same as the count.
      */
-    screenshots: z.array(z.string().min(1)).max(2).default([]),
+    screenshots: z
+      .array(
+        z.union([
+          z.string().min(1),
+          z.object({ path: z.string().min(1), alt: z.string().min(1) }),
+        ]),
+      )
+      .max(2)
+      .default([]),
 
     /** Only consulted when `screenshots` is empty — see above. */
     screenshotCount: z.number().int().min(0).max(2).default(2),

@@ -26,5 +26,15 @@
     { "label": "Result", "value": "1st place — Huawei ICT World Final, Shenzhen" }
   ],
   "links": [],
+  "screenshots": [
+    {
+      "path": "aegis/team-medal.jpg",
+      "alt": "The AEGIS team with their medal at the Huawei ICT Competition World Final, Shenzhen"
+    },
+    {
+      "path": "aegis/team-event.jpg",
+      "alt": "The AEGIS team at the Huawei ICT Competition World Final in Shenzhen"
+    }
+  ],
   "screenshotCount": 0
 }
