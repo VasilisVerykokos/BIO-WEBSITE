@@ -52,8 +52,8 @@ import portrait from '../assets/portrait.jpg';
         alt={hero.givenName + ' ' + hero.familyName}
         formats={['avif', 'webp']}
         fallbackFormat="jpeg"
-        widths={[180, 240, 360, 480, 600]}
-        sizes="(min-width: 64rem) 260px, 180px"
+        widths={[180, 240, 360, 480, 600, 960]}
+        sizes="(min-width: 64rem) 320px, 200px"
         loading="eager"
         decoding="async"
         fetchpriority="high"
@@ -203,7 +203,7 @@ import portrait from '../assets/portrait.jpg';
 
   .hero-portrait :global(picture),
   .hero-portrait :global(img) {
-    width: 8.75rem; /* 140px — well under the 200px mobile cap in MOBILE_SPEC §8 */
+    width: 12.5rem; /* 200px — MOBILE_SPEC §8's cap, exactly. Was 140px. */
     height: auto;
     aspect-ratio: 1;
     border-radius: var(--radius-round);
@@ -228,8 +228,9 @@ import portrait from '../assets/portrait.jpg';
       margin-top: var(--sp-2);
     }
 
+    .hero-portrait :global(picture),
     .hero-portrait :global(img) {
-      width: 16.25rem; /* 260px */
+      width: 20rem; /* 320px, was 260px */
     }
   }
 </style>
