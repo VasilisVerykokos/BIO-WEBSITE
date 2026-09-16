@@ -1,0 +1,70 @@
+name: CI
+
+# Every push and PR. Vercel's own build (triggered separately on push to
+# main) still ships even if this fails — see scripts/verify-build.mjs for why
+# that split exists. This workflow is the loud, hard-failing signal; Vercel's
+# build is the forgiving one that keeps the live site up.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel a superseded run on the same branch rather than let two race.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check (astro check + tsc)
+        run: npm run check
+
+      - name: Lint (a11y rules are errors, not warnings)
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+      # Runs prebuild (font subsetting) and postbuild (CSP hash guard, hard
+      # fail; placeholder guard, warn-only) automatically.
+      - name: Build
+        run: npm run build
+        env:
+          SITE_URL: https://bio-website-olive.vercel.app
+
+      # The hard-failing half of the placeholder guard. Deliberately not part
+      # of `npm run build` above — see scripts/verify-build.mjs.
+      - name: Verify build (strict — hard fail on open CONTENT.md blockers)
+        run: npm run verify:strict
+
+      - name: Accessibility (axe-core, 0 violations required)
+        run: npm run a11y:ci
+
+      - name: Performance budgets (Lighthouse CI)
+        run: npm run lhci
+        env:
+          LHCI_BUILD_CONTEXT__CURRENT_BRANCH: ${{ github.ref_name }}
+
+      - name: Link check
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --base https://bio-website-olive.vercel.app
+            --no-progress
+            dist/**/*.html
+          fail: true

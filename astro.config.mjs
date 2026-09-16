@@ -6,21 +6,43 @@ import sitemap from '@astrojs/sitemap';
  * The canonical origin.
  *
  * Gate 1: the same build artifact goes to every environment and only the
- * config differs, so no host is hardcoded. Production, preview, and the
- * container build all supply SITE_URL; nothing else has to change.
+ * config differs, so no host is hardcoded. Nothing here is Vercel-specific
+ * config living outside this file — it's still one rule, "read the origin
+ * from the environment," just with a fallback chain instead of one variable.
  *
- * The fallback is localhost, deliberately — NOT a guessed production domain.
- * The real domain is blocker B10 and has not been bought yet. Baking in a
- * host nobody owns would put a dead URL into every Open Graph tag, the
- * sitemap, and the JSON-LD. Once B10 lands, set SITE_URL in the Vercel
- * project and in docker compose; this file does not change.
+ * Precedence:
+ *   1. SITE_URL, explicit — the eventual custom domain (B10) once it's
+ *      bought, and what docker compose already passes as a build arg.
+ *   2. VERCEL_PROJECT_PRODUCTION_URL, when this is a production build on
+ *      Vercel — the stable project domain (right now bio-website-olive.
+ *      vercel.app), not the per-deployment hash URL, so canonical links and
+ *      the sitemap don't change on every push.
+ *   3. VERCEL_URL, on any other Vercel build (a PR preview) — that preview's
+ *      own URL, so a preview correctly describes itself rather than pointing
+ *      at production.
+ *   4. localhost, for local dev only. Never a guessed production domain —
+ *      baking in a host nobody owns would put a dead URL into every Open
+ *      Graph tag, the sitemap, and the JSON-LD.
+ *
+ * Both Vercel variables arrive as a bare hostname, no scheme.
  */
-const SITE_URL = process.env.SITE_URL ?? 'http://localhost:4321';
+const SITE_URL =
+  process.env.SITE_URL ??
+  (process.env.VERCEL_ENV === 'production' && process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:4321');
 
-if (!process.env.SITE_URL && process.env.NODE_ENV === 'production') {
+if (
+  !process.env.SITE_URL &&
+  !process.env.VERCEL &&
+  process.env.NODE_ENV === 'production'
+) {
   console.warn(
-    '\n  SITE_URL is not set. Absolute URLs (Open Graph, sitemap, JSON-LD) will\n' +
-      `  point at ${SITE_URL}, which is wrong for a real deploy. See blocker B10.\n`,
+    '\n  SITE_URL is not set and this is not a Vercel build. Absolute URLs\n' +
+      `  (Open Graph, sitemap, JSON-LD) will point at ${SITE_URL}, which is wrong\n` +
+      '  for a real deploy.\n',
   );
 }
 

@@ -20,7 +20,9 @@
     "fonts": "node scripts/subset-fonts.mjs",
     "prebuild": "npm run fonts",
     "lhci": "lhci autorun",
-    "og": "node scripts/generate-og.mjs"
+    "og": "node scripts/generate-og.mjs",
+    "postbuild": "node scripts/verify-build.mjs",
+    "verify:strict": "node scripts/verify-build.mjs --strict"
   },
   "allowScripts": {
     "esbuild": true,
