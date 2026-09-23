@@ -26,7 +26,10 @@
     { "label": "Result", "value": "1st place — Huawei ICT World Final, Shenzhen" }
   ],
   "links": [
-    { "text": "Huawei", "href": "https://www.huawei.com/eu/news/2026/europe-ict-competition" },
+    {
+      "text": "Huawei",
+      "href": "https://www.huawei.com/eu/news/2026/europe-ict-competition"
+    },
     {
       "text": "UoM",
       "href": "https://www.uom.gr/20077-to-proto-brabeio-katekthse-h-foithtikh-omada-aegis-toy-panepisthmioy-makedonias-ston-pagosmio-teliko-ict-competition-ths-huawei"
