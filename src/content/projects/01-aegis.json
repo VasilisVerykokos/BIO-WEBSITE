@@ -25,7 +25,57 @@
     },
     { "label": "Result", "value": "1st place — Huawei ICT World Final, Shenzhen" }
   ],
-  "links": [],
+  "links": [
+    { "text": "Huawei", "href": "https://www.huawei.com/eu/news/2026/europe-ict-competition" },
+    {
+      "text": "UoM",
+      "href": "https://www.uom.gr/20077-to-proto-brabeio-katekthse-h-foithtikh-omada-aegis-toy-panepisthmioy-makedonias-ston-pagosmio-teliko-ict-competition-ths-huawei"
+    },
+    {
+      "text": "AMNA",
+      "href": "https://www.amna.gr/macedonia/article/955906/Foitites-tou-PAMAK-dimiourgoun-chartes-pou-entopizoun-eualota-atoma-sti-diarkeia-fusikon-katastrofon"
+    },
+    {
+      "text": "Zougla",
+      "href": "https://www.zougla.gr/greece/protia-gia-tous-foitites-tou-pamak-ston-pagkosmio-diagonismo-ict-competition-tis-huawei-sti-kina/"
+    },
+    {
+      "text": "Politic.gr",
+      "href": "https://www.politic.gr/thessaloniki/proto-vraveio-gia-foitites-tou-pamak-ston-pagkosmio-diagonismo-tis-huawei"
+    },
+    {
+      "text": "Alfavita",
+      "href": "https://www.alfavita.gr/ekpaideysi/550766_pamak-proto-brabeio-katektise-i-foititiki-omada-aegis-ston-pagkosmio-teliko-ict"
+    },
+    {
+      "text": "Parallaxi",
+      "href": "https://parallaximag.gr/thessaloniki-news/pamak-foitites-epestrepsan-apo-tin-kina-me-to-proto-vraveio-toy-pagkosmioy-diagonismoy-tis-huawei"
+    },
+    {
+      "text": "SKAI",
+      "href": "https://www.skai.gr/news/technology/foitites-tou-pamak-dimiourgoun-xartes-entopismou-eyaloton-me-tn-se-katastrofes"
+    },
+    {
+      "text": "Neolaia.gr",
+      "href": "https://www.neolaia.gr/2025/12/11/dyo-protes-theseis-katelavan-foititikes-omades-tou-panepistimiou-makedonias-se-diagonismous-kainotomias-neofyous-epicheirimatikotitas-kai-technitis-noimosynis/"
+    },
+    {
+      "text": "iNews.gr",
+      "href": "https://www.inewsgr.com/362/to-proto-vraveio-katektise-i-foititiki-omada-aegis-tou-pamak-ston-pagkosmio-teliko-ict-competition-tis-huawei.htm"
+    },
+    {
+      "text": "Seleo",
+      "href": "https://seleo.gr/eidiseis/paideia/to-proto-vraveio-katektise-i-foititik/"
+    },
+    {
+      "text": "Foititika Nea",
+      "href": "https://www.foititikanea.gr/%CF%80%CE%B1%CE%BD%CE%B5%CF%80%CE%B9%CF%83%CF%84%CE%AE%CE%BC%CE%B9%CE%B1/%CF%80%CE%B1%CE%BD%CE%B5%CF%80%CE%B9%CF%83%CF%84%CE%AE%CE%BC%CE%B9%CE%BF-%CE%BC%CE%B1%CE%BA%CE%B5%CE%B4%CE%BF%CE%BD%CE%AF%CE%B1%CF%82/35380-%CF%83%CE%AC%CF%81%CF%89%CF%83%CE%B1%CE%BD-%CE%BF%CE%B9-%CF%86%CE%BF%CE%B9%CF%84%CE%B7%CF%84%CE%AD%CF%82-%CF%84%CE%BF%CF%85-%CF%80%CE%B1%CE%BC%CE%B1%CE%BA-%CE%B4%CF%8D%CE%BF-%CF%80%CF%81%CF%89%CF%84%CE%B9%CE%AD%CF%82-%CF%83%CE%B5-%CE%B4%CE%B9%CE%B5%CE%B8%CE%BD%CE%B5%CE%AF%CF%82-%CE%B4%CE%B9%CE%B1%CE%B3%CF%89%CE%BD%CE%B9%CF%83%CE%BC%CE%BF%CF%8D%CF%82-%CE%BA%CE%B1%CE%B9%CE%BD%CE%BF%CF%84%CE%BF%CE%BC%CE%AF%CE%B1%CF%82-%CE%BA%CE%B1%CE%B9-ai-%CF%83%CF%84%CE%B7-%CE%B8%CE%B5%CF%83%CF%83%CE%B1%CE%BB%CE%BF%CE%BD%CE%AF%CE%BA%CE%B7"
+    },
+    {
+      "text": "Makedonika Nea",
+      "href": "https://www.makedonikanea.gr/ellada/i-foititiki-omada-aegis-toy-pamak-katektise-proto-brabeio-ston-pagkosmio-teliko-ict"
+    }
+  ],
   "screenshots": [
     {
       "path": "aegis/team-medal.jpg",
