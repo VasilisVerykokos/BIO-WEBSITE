@@ -148,13 +148,13 @@ export const awards = [
   {
     title: '1st place — Huawei ICT Competition, World Final',
     context:
-      'Innovation Track. Shenzhen, China, with team AEGIS. [[ B2 — 1st of N teams from M countries ]]',
+      'Innovation Track. Shenzhen, China, with team AEGIS — 1st place from a field of 220,000 students across 49 countries and regions in the 10th Huawei ICT Competition.',
     date: 'June 2026',
     featured: true,
   },
   {
     title: '1st place — Huawei ICT Competition, European Final',
-    context: 'Innovation Track, with team AEGIS. [[ B2 — N teams ]]',
+    context: 'Innovation Track, with team AEGIS.',
     date: 'May 2026',
     featured: false,
   },
