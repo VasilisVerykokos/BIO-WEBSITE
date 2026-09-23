@@ -52,6 +52,13 @@ jobs:
       - name: Verify build (strict — hard fail on open CONTENT.md blockers)
         run: npm run verify:strict
 
+      # The runner image's preinstalled Chrome can drift ahead of or behind
+      # whatever @axe-core/cli's `chromedriver: latest` dependency resolved
+      # to at npm-install time, which axe-core needs to match exactly to
+      # launch chrome-headless at all.
+      - name: Sync ChromeDriver to installed Chrome
+        run: npx browser-driver-manager install chrome
+
       - name: Accessibility (axe-core, 0 violations required)
         run: npm run a11y:ci
 
