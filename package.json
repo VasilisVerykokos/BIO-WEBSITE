@@ -16,7 +16,7 @@
     "format:check": "prettier --check .",
     "astro": "astro",
     "a11y": "axe http://localhost:4321 --exit",
-    "a11y:ci": "npm run build && astro preview && npm run a11y && astro preview stop",
+    "a11y:ci": "npm run build && astro preview --background && npm run a11y && astro preview stop",
     "fonts": "node scripts/subset-fonts.mjs",
     "prebuild": "npm run fonts",
     "lhci": "lhci autorun",
