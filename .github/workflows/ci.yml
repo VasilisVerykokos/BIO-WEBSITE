@@ -19,6 +19,12 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Job-level so it also covers the rebuild inside `npm run a11y:ci`
+    # (build && preview && axe) — a step-level env on "Build" alone left
+    # that second build without it, leaking localhost:4321 into dist/
+    # for whatever ran after.
+    env:
+      SITE_URL: https://bio-website-olive.vercel.app
 
     steps:
       - uses: actions/checkout@v4
@@ -44,8 +50,6 @@ jobs:
       # fail; placeholder guard, warn-only) automatically.
       - name: Build
         run: npm run build
-        env:
-          SITE_URL: https://bio-website-olive.vercel.app
 
       # The hard-failing half of the placeholder guard. Deliberately not part
       # of `npm run build` above — see scripts/verify-build.mjs.
@@ -70,8 +74,13 @@ jobs:
       - name: Link check
         uses: lycheeverse/lychee-action@v2
         with:
+          # Several press outlets sit behind Cloudflare bot protection and
+          # 403 lychee's default "lychee/x.y.z" agent, even though a real
+          # browser gets 200 — a plausible-looking UA avoids that false
+          # positive without loosening the check for genuinely dead links.
           args: >-
             --base https://bio-website-olive.vercel.app
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
             --no-progress
             dist/**/*.html
           fail: true
