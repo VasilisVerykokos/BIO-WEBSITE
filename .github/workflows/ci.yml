@@ -78,9 +78,17 @@ jobs:
           # 403 lychee's default "lychee/x.y.z" agent, even though a real
           # browser gets 200 — a plausible-looking UA avoids that false
           # positive without loosening the check for genuinely dead links.
+          #
+          # politic.gr and neolaia.gr are excluded outright: both have been
+          # manually confirmed to return 200 to a real browser, but flake
+          # (403, or an "HTTP/2 protocol error") intermittently against
+          # this runner's network regardless of UA — a Cloudflare quirk on
+          # their end, not a dead link.
           args: >-
             --base https://bio-website-olive.vercel.app
             --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+            --exclude "politic\.gr"
+            --exclude "neolaia\.gr"
             --no-progress
             dist/**/*.html
           fail: true
