@@ -146,20 +146,20 @@ export const otherProject = {
  */
 export const awards = [
   {
-    title: '1st place — Huawei ICT Competition, World Final',
+    title: '1st prize — Huawei ICT Competition, World Final',
     context:
-      'Innovation Track. Shenzhen, China, with team AEGIS — 1st place from a field of 220,000 students across 49 countries and regions in the 10th Huawei ICT Competition.',
+      'Innovation Track. Shenzhen, China, with team AEGIS — 1st prize from a field of 220,000 students across 49 countries and regions in the 10th Huawei ICT Competition.',
     date: 'June 2026',
     featured: true,
   },
   {
-    title: '1st place — Huawei ICT Competition, European Final',
+    title: '1st prize — Huawei ICT Competition, European Final',
     context: 'Innovation Track, with team AEGIS.',
     date: 'May 2026',
     featured: false,
   },
   {
-    title: '1st place — "Unboxed by PwC" AI Hackathon',
+    title: '1st prize — "Unboxed by PwC" AI Hackathon',
     context: 'With team AEGIS.',
     date: 'December 2025',
     featured: false,

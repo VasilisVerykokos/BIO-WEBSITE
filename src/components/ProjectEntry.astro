@@ -77,29 +77,38 @@ const headingId = `project-${slug}`;
       </ul>
 
       <SpecSheet rows={project.spec} />
+    </div>
+  </details>
 
-      {/* Screenshots live in here on mobile. MOBILE_SPEC §5 puts deeper
-          engineering detail behind the expander, and three strips cost 615px
-          of a 7000px page budget — more than the entire Skills section. On
-          desktop the expander is forced open, so nothing is hidden there. */}
+  {/* Photos are proof of the thing happening (a team holding a medal, an
+      award ceremony), not deep engineering detail — they get their own
+      always-visible section rather than being buried inside the collapsed
+      expander, which on mobile was hiding them from view entirely. */}
+  {(project.screenshots.length > 0 || project.screenshotCount > 0) && (
+    <div class="media-section">
+      <h4 class="media-section__label">Photos</h4>
       <MediaStrip
         projectTitle={project.title}
         screenshots={project.screenshots}
         screenshotCount={project.screenshotCount}
       />
     </div>
-  </details>
+  )}
 
-  {/* Conditional so an empty links array — a project with nothing to point at
-      yet — leaves no dangling empty list carrying its own top margin. */}
+  {/* Its own labelled, bordered section so it reads as a distinct block —
+      not as content hanging off the "Technical detail" summary above it,
+      which is what a bare list right after a closed <details> looked like. */}
   {project.links.length > 0 && (
-    <ul class="project-links" role="list">
-      {project.links.map((link) => (
-        <li>
-          {link.href ? <a href={link.href}>{link.text}</a> : <span>{link.text}</span>}
-        </li>
-      ))}
-    </ul>
+    <div class="press-section">
+      <h4 class="press-section__label">Press</h4>
+      <ul class="project-links" role="list">
+        {project.links.map((link) => (
+          <li>
+            {link.href ? <a href={link.href}>{link.text}</a> : <span>{link.text}</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
   )}
 </article>
 
@@ -267,6 +276,28 @@ const headingId = `project-${slug}`;
   }
 
   /* ------------------------------------------------------------------------
+     Photos and press — dedicated, always-visible sections
+     ---------------------------------------------------------------------- */
+
+  .media-section,
+  .press-section {
+    margin-top: var(--sp-4);
+    border-top: var(--rule) solid var(--line);
+    padding-top: var(--sp-4);
+  }
+
+  .media-section__label,
+  .press-section__label {
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-label);
+    line-height: var(--lh-ui);
+    text-transform: uppercase;
+  }
+
+  /* ------------------------------------------------------------------------
      Links
      ---------------------------------------------------------------------- */
 
@@ -274,7 +305,7 @@ const headingId = `project-${slug}`;
     display: flex;
     flex-wrap: wrap;
     gap: var(--sp-2) var(--sp-4);
-    margin: var(--sp-4) 0 0;
+    margin: var(--sp-3) 0 0;
     padding: 0;
   }
 

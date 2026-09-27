@@ -44,7 +44,7 @@ const ogImage = new URL('/og.png', Astro.site ?? Astro.url).href;
  * for facts that are settled.
  */
 const firstPlaces = awards
-  .filter((a) => a.title.startsWith('1st place'))
+  .filter((a) => a.title.startsWith('1st prize'))
   .map((a) => `${a.title} (${a.date})`);
 
 const jsonLd = {
